@@ -117,52 +117,48 @@
     </div>
 
     <form action="https://formspree.io/f/xaqdwyba" method="POST" id="checkinForm" class="internal-form">
-      <div style="text-align:center; font-size:14px; color:var(--gold); margin-bottom:10px; font-weight:bold; letter-spacing:1px;">PROFILINI TAMAMLA</div>
-      
-      <input type="text" name="name" placeholder="Ad Soyad" required>
-      <input type="text" name="instagram" placeholder="Instagram Kullanıcı Adı" required>
-      <input type="tel" name="phone" placeholder="Telefon (05xx)" required>
+      <div id="formContent">
+          <div style="text-align:center; font-size:14px; color:var(--gold); margin-bottom:10px; font-weight:bold; letter-spacing:1px;">PROFILINI TAMAMLA</div>
+          
+          <input type="text" name="name" placeholder="Ad Soyad" required>
+          <input type="text" name="instagram" placeholder="Instagram Kullanıcı Adı" required>
+          <input type="tel" name="phone" placeholder="Telefon (05xx)" required>
 
-      <div style="display: flex; gap: 10px;">
-        <input type="number" name="height" placeholder="Boy (cm)" style="flex: 1;">
-        <select name="age" style="flex: 1;" required>
-            <option value="" disabled selected>Yaş</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23-26">23-26</option>
-            <option value="27+">27+</option>
-        </select>
+          <div style="display: flex; gap: 10px;">
+            <input type="number" name="height" placeholder="Boy (cm)" style="flex: 1;">
+            <select name="age" style="flex: 1;" required>
+                <option value="" disabled selected>Yaş</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23-26">23-26</option>
+                <option value="27+">27+</option>
+            </select>
+          </div>
+
+          <textarea name="hobbies" placeholder="Hobilerin ve ilgi alanların..."></textarea>
+
+          <select name="mood" required>
+            <option value="" disabled selected>Bugünkü Modun?</option>
+            <option value="☕ Kahve & Sohbet">☕ Kahve & Sohbet</option>
+            <option value="🍸 Eğlence / Party">🍸 Eğlence / Party</option>
+            <option value="🤝 Network / İş">🤝 Network / İş</option>
+          </select>
+
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="_age_confirmed" required> 18 yaşından büyük olduğumu beyan ederim.</label>
+            <label><input type="checkbox" name="_terms_confirmed" required> Topluluk kurallarını kabul ediyorum.</label>
+          </div>
+
+          <input type="hidden" name="_memberID" id="hiddenMemberID">
+          <button type="submit" class="btn" style="background:var(--gold); color:#000; margin-top:10px;">Check-in Yap</button>
       </div>
-
-      <textarea name="hobbies" placeholder="Hobilerin ve ilgi alanların..."></textarea>
-
-      <select name="mood" required>
-        <option value="" disabled selected>Bugünkü Modun?</option>
-        <option value="☕ Kahve & Sohbet">☕ Kahve & Sohbet</option>
-        <option value="🍸 Eğlence / Party">🍸 Eğlence / Party</option>
-        <option value="🤝 Network / İş">🤝 Network / İş</option>
-      </select>
-
-      <div class="checkbox-group">
-        <label>
-            <input type="checkbox" name="_age_confirmed" required> 
-            18 yaşından büyük olduğumu beyan ederim.
-        </label>
-        <label>
-            <input type="checkbox" name="_terms_confirmed" required> 
-            Topluluk kurallarını kabul ediyorum.
-        </label>
-      </div>
-
-      <input type="hidden" name="_memberID" id="hiddenMemberID">
-      <button type="submit" class="btn" style="background:var(--gold); color:#000; margin-top:10px;">Check-in Yap</button>
     </form>
     
     <button id="showFormBtn" onclick="showForm()" class="btn" style="background:var(--gold); color:#000; max-width:300px;">Check-in Yap</button>
-    <p style="font-size:11px; color:var(--gray); margin-top:20px; text-align:center;">Formu doldurmadan erişim tamamlanmaz.</p>
+    <p id="statusMsg" style="font-size:11px; color:var(--gray); margin-top:20px; text-align:center;">Formu doldurmadan erişim tamamlanmaz.</p>
   </div>
 
   <div id="loginModal">
@@ -170,12 +166,35 @@
       <h3 style="margin:0">Giriş Kodu</h3>
       <input type="text" id="passCode" placeholder="••••" autocomplete="off">
       <button class="btn" onclick="checkCode()">Kodu Onayla</button>
-      <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer;">Kapat</button>
+      <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer;">Vazgeç</button>
     </div>
   </div>
 
   <script>
     const correctCode = "ANKARA06"; 
+
+    // SPAM KONTROLÜ
+    function checkSubmissionStatus() {
+        const lastDate = localStorage.getItem('temas_last_send');
+        const today = new Date().toLocaleDateString();
+        
+        if (lastDate === today) {
+            document.getElementById('showFormBtn').style.display = 'none';
+            document.getElementById('checkinForm').style.display = 'flex';
+            document.getElementById('formContent').innerHTML = `
+                <div style="text-align:center; padding:20px; color:var(--gold);">
+                    <div style="font-size:30px; margin-bottom:10px;">✨</div>
+                    <strong>Bugün zaten check-in yaptın!</strong><br>
+                    <span style="font-size:12px; color:var(--gray); display:block; margin-top:10px;">Yeni hak için yarını bekle.</span>
+                </div>`;
+            document.getElementById('statusMsg').innerText = "Giriş hakkın yarın yenilenecektir.";
+        }
+    }
+
+    // FORM GÖNDERME TETİĞİ
+    document.getElementById('checkinForm').addEventListener('submit', function() {
+        localStorage.setItem('temas_last_send', new Date().toLocaleDateString());
+    });
 
     function toggleAudio() {
       const a = document.getElementById('vibe-audio');
@@ -194,6 +213,7 @@
         document.getElementById('randomID').innerText = mID;
         document.getElementById('hiddenMemberID').value = mID;
         document.getElementById('membershipCard').style.display = 'flex';
+        checkSubmissionStatus(); // Kart açılınca spamı kontrol et
         window.scrollTo(0,0);
       } else { alert("Hatalı kod."); }
     }
