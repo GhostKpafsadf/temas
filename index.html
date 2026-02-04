@@ -12,7 +12,7 @@
     
     body { 
       margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
-      background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
+      background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
     }
 
     /* SES KONTROLÜ */
@@ -22,79 +22,73 @@
       padding: 10px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(10px);
     }
 
-    /* ANA EKRAN (HERO) */
+    /* ANA EKRAN */
     .hero { 
       min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
       justify-content: center; padding: 60px 20px; box-sizing: border-box;
       background: radial-gradient(circle at center, #111 0%, #000 100%);
-      position: relative;
+      transition: opacity 0.5s ease;
     }
 
-    /* YOĞUNLUK HARİTASI (HEATMAP) */
     .heatmap {
       display: flex; gap: 15px; margin-bottom: 25px; background: var(--glass);
       padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); font-size: 11px;
     }
-    .pulse-ring { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 8px var(--active-green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+    .pulse-ring { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 8px var(--active-green); animation: p 2s infinite; }
+    @keyframes p { 0% {transform: scale(1); opacity:1;} 100% {transform: scale(2.5); opacity:0;} }
 
-    /* LOGO & BAŞLIK */
     .logo-container { width: 100px; height: 100px; margin-bottom: 20px; }
     .logo-img { width: 100%; height: 100%; object-fit: contain; }
-    
+
     h1 { font-size: 44px; margin: 0; letter-spacing: 8px; font-weight: 900; text-transform: uppercase; text-align: center; }
 
-    .badge { margin: 10px 0; padding: 5px 15px; border: 1px solid var(--border); border-radius: 20px; font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; }
-
-    .timer-box { margin: 15px 0; font-size: 13px; color: var(--gray); letter-spacing: 1px; }
-    #timer { color: #fff; font-weight: 700; }
-
-    /* ANA BUTON */
     .btn {
-      display: block; padding: 22px; background: #fff; color: #000; 
-      text-decoration: none; border-radius: 20px; font-weight: 800; 
-      font-size: 18px; border: none; width: 100%; max-width: 320px; cursor: pointer; transition: 0.3s;
-      box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+      display: block; padding: 20px; background: #fff; color: #000; 
+      text-decoration: none; border-radius: 18px; font-weight: 800; 
+      font-size: 17px; border: none; width: 100%; max-width: 320px; cursor: pointer; transition: 0.3s;
     }
-    .btn:active { transform: scale(0.96); }
+    .btn:disabled { background: var(--gray); cursor: not-allowed; }
 
-    /* BİLGİ ALANI (SCROLL) */
-    .content-section { padding: 80px 30px; max-width: 450px; margin: 0 auto; }
-    .info-card { background: var(--glass); padding: 25px; border-radius: 22px; border: 1px solid var(--border); margin-bottom: 15px; }
-    .info-card strong { color: #fff; display: block; margin-bottom: 5px; font-size: 18px; }
-    .info-card p { margin: 0; color: var(--gray); font-size: 15px; }
-
-    /* VIP KART EKRANI */
+    /* VIP EKRANI */
     #membershipCard {
       display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
       background: #000; z-index: 3000; flex-direction: column; align-items: center; 
-      overflow-y: auto; padding: 40px 20px; box-sizing: border-box;
+      overflow-y: auto; padding: 40px 20px; box-sizing: border-box; animation: fadeIn 0.5s;
     }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
     .card-3d {
       width: 100%; max-width: 300px; height: 420px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
       border-radius: 24px; border: 1px solid var(--gold); margin-bottom: 30px;
-      display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px;
-      box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); box-sizing: border-box;
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
+      padding: 40px 20px; box-sizing: border-box; box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+      position: relative;
     }
 
-    /* FORM TASARIMI */
+    .card-stamp {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+      border: 3px solid var(--active-green); color: var(--active-green); padding: 10px 20px;
+      font-weight: 900; letter-spacing: 5px; border-radius: 10px; font-size: 24px;
+      opacity: 0; transition: 0.5s; pointer-events: none;
+    }
+
+    /* FORM ALANI */
     .internal-form {
       width: 100%; max-width: 320px; display: none; flex-direction: column; gap: 12px;
       background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border);
-      backdrop-filter: blur(20px); margin-bottom: 50px; box-sizing: border-box;
+      backdrop-filter: blur(20px); margin-bottom: 50px;
     }
+
     .internal-form input, .internal-form select, .internal-form textarea {
       width: 100%; padding: 16px; border-radius: 14px; border: 1px solid var(--border);
-      background: rgba(0,0,0,0.3); color: #fff; font-size: 15px; outline: none; box-sizing: border-box; font-family: inherit;
+      background: rgba(0,0,0,0.3); color: #fff; font-size: 15px; outline: none; box-sizing: border-box;
     }
     .internal-form textarea { min-height: 80px; resize: none; }
-    .checkbox-group { text-align: left; font-size: 12px; color: var(--gray); display: flex; flex-direction: column; gap: 10px; margin: 10px 0; }
-    .checkbox-group label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 
-    /* ŞİFRE MODAL */
-    #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:4000; align-items:center; justify-content:center; backdrop-filter:blur(20px); }
+    /* MODAL */
+    #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; backdrop-filter:blur(15px); }
     .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
-    #passCode { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:24px; outline:none; }
+    #passCode { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:22px; outline:none; }
   </style>
 </head>
 <body onload="checkTime()">
@@ -104,119 +98,119 @@
 
   <div class="hero">
     <div class="heatmap">
-      <div style="display:flex; align-items:center; gap:5px;"><span class="pulse-ring"></span> LIVE AT ANKAMALL</div>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <span class="pulse-ring"></span> 
+        LIVE: <span id="liveCount">14</span> ÜYE AKTİF
+      </div>
     </div>
-
     <div class="logo-container">
-      <img src="logo.png" alt="TEMAS" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/7074/7074151.png'">
+        <img src="logo.png" alt="TEMAS" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/7074/7074151.png'">
     </div>
-
     <h1>TEMAS</h1>
-    <div class="badge">ANKARA • VIP ACCESS</div>
-
-    <div class="timer-box">Günün Teması Kapanıyor: <span id="timer">00:00:00</span></div>
-    
+    <div style="font-size:11px; color:var(--gray); letter-spacing:3px; margin-bottom:30px;">ANKARA • LIMITED ACCESS</div>
+    <div class="timer-box" style="margin-bottom:20px; font-size:13px; color:var(--gray);">Kapanışa: <span id="timer" style="color:#fff">00:00:00</span></div>
     <button onclick="openModal()" class="btn">Giriş Yap</button>
-
-    <div style="margin-top: 50px; color: var(--gray); font-size: 11px; letter-spacing: 2px; cursor: pointer;" onclick="window.scrollTo(0, window.innerHeight)">BİLGİ İÇİN KAYDIR ↓</div>
-  </div>
-
-  <div class="content-section">
-    <h2>Temas Nedir?</h2>
-    <div class="info-card">
-      <strong>Aynı Mekanda Bağlan</strong>
-      <p>Şu an bulunduğun mekandaki diğer seçkin üyelerle anında dijital temas kurmanı sağlar.</p>
-    </div>
-    <div class="info-card">
-      <strong>Tamamen Kapalı Devre</strong>
-      <p>Sadece günlük koda sahip olanlar erişebilir. Bilgilerin sadece o gün için geçerlidir.</p>
-    </div>
   </div>
 
   <div id="membershipCard">
     <div class="card-3d">
+      <div class="card-stamp" id="successStamp">AKTİF</div>
       <div style="font-size:10px; letter-spacing:4px; color:var(--gold); opacity:0.8;">VIP MEMBERSHIP</div>
       <div style="font-size:32px; font-weight:900; letter-spacing:6px;">TEMAS</div>
       <div style="text-align:center;">
         <div id="randomID" style="color:var(--gold); font-family:monospace; font-size:14px; margin-bottom:15px; opacity:0.7;">#TM-XXXX</div>
         <div style="font-size:24px; letter-spacing:8px; margin-bottom:5px;">••••••••</div>
-        <div style="font-size:12px; color:var(--gold); font-style:italic;">acaba ne? 😉</div>
+        <div style="font-size:12px; color:var(--gold); font-style:italic;">hoş geldin</div>
       </div>
       <div style="font-size:11px; color:var(--active-green); font-weight:bold; letter-spacing:2px; border:1px solid var(--active-green); padding:5px 15px; border-radius:10px;">ERİŞİM ONAYLANDI</div>
     </div>
 
-    <form action="https://formspree.io/f/xaqdwyba" method="POST" id="checkinForm" class="internal-form">
+    <form id="checkinForm" class="internal-form">
       <div id="formContent">
-          <div style="text-align:center; font-size:14px; color:var(--gold); margin-bottom:15px; font-weight:bold; letter-spacing:1px;">PROFİLİNİ TAMAMLA</div>
-          
+          <div style="text-align:center; font-size:14px; color:var(--gold); margin-bottom:10px; font-weight:bold;">PROFİLİNİ TAMAMLA</div>
           <input type="text" name="name" placeholder="Ad Soyad" required>
-          <input type="text" name="instagram" placeholder="Instagram Hesabı (@...)" required>
+          <input type="text" name="instagram" placeholder="Instagram Kullanıcı Adı" required>
           <input type="tel" name="phone" placeholder="Telefon (05xx)" required>
-
           <div style="display: flex; gap: 10px;">
             <input type="number" name="height" placeholder="Boy (cm)" style="flex: 1;">
             <select name="age" style="flex: 1;" required>
                 <option value="" disabled selected>Yaş</option>
                 <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-                <option value="21">21</option><option value="22">22</option><option value="23-26">23-26</option>
-                <option value="27+">27+</option>
+                <option value="21">21</option><option value="22">22</option><option value="23-26">23-26</option><option value="27+">27+</option>
             </select>
           </div>
-
           <textarea name="hobbies" placeholder="Hobilerin ve ilgi alanların..."></textarea>
-
           <select name="mood" required>
             <option value="" disabled selected>Bugünkü Modun?</option>
             <option value="☕ Kahve & Sohbet">☕ Kahve & Sohbet</option>
             <option value="🍸 Eğlence / Party">🍸 Eğlence / Party</option>
             <option value="🤝 Network / İş">🤝 Network / İş</option>
           </select>
-
-          <div class="checkbox-group">
-            <label><input type="checkbox" name="_age_confirmed" required> 18 yaşından büyük olduğumu onaylıyorum.</label>
-            <label><input type="checkbox" name="_terms_confirmed" required> Kuralları ve gizlilik izinlerini kabul ediyorum.</label>
+          <div style="font-size:11px; color:var(--gray); margin:10px 0;">
+            <label><input type="checkbox" required> 18 yaşından büyüğüm.</label><br>
+            <label><input type="checkbox" required> Kuralları kabul ediyorum.</label>
           </div>
-
           <input type="hidden" name="_memberID" id="hiddenMemberID">
-          <button type="submit" class="btn" style="background:var(--gold); color:#000; margin-top:10px;">Check-in Yap</button>
+          <button type="submit" id="submitBtn" class="btn" style="background:var(--gold); color:#000;">Check-in Yap</button>
       </div>
     </form>
     
     <button id="showFormBtn" onclick="showForm()" class="btn" style="background:var(--gold); color:#000; max-width:300px;">Check-in Yap</button>
-    <p id="statusMsg" style="font-size:11px; color:var(--gray); margin-top:20px; text-align:center;">Ekran görüntüsü alıp paylaşabilirsin.</p>
+    <p id="statusMsg" style="font-size:11px; color:var(--gray); margin-top:20px; text-align:center;">Ekran görüntüsü almayı unutma.</p>
   </div>
 
   <div id="loginModal">
     <div class="modal-box">
-      <h3 style="margin:0">Giriş Kodu</h3>
-      <input type="text" id="passCode" placeholder="••••" autocomplete="off">
-      <button class="btn" onclick="checkCode()">Kodu Onayla</button>
-      <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer;">Vazgeç</button>
+      <h3>Giriş Kodu</h3>
+      <input type="text" id="passCode" placeholder="••••">
+      <button class="btn" onclick="checkCode()">Onayla</button>
     </div>
   </div>
 
   <script>
     const correctCode = "ANKARA06"; 
 
-    // SPAM KONTROLÜ
+    // FORM GÖNDERİMİ (AJAX - Sitede Kalma)
+    const form = document.getElementById("checkinForm");
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.innerText = "Gönderiliyor...";
+
+        const data = new FormData(form);
+        fetch("https://formspree.io/f/xaqdwyba", {
+            method: "POST",
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                localStorage.setItem('temas_last_send', new Date().toLocaleDateString());
+                document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Kayıt Başarıyla Alındı! ✨</div>";
+                document.getElementById('successStamp').style.opacity = "1";
+            } else {
+                alert("Bir hata oluştu, tekrar dene.");
+                btn.disabled = false;
+                btn.innerText = "Check-in Yap";
+            }
+        });
+    });
+
     function checkSubmissionStatus() {
         const lastDate = localStorage.getItem('temas_last_send');
-        const today = new Date().toLocaleDateString();
-        if (lastDate === today) {
+        if (lastDate === new Date().toLocaleDateString()) {
             document.getElementById('showFormBtn').style.display = 'none';
             document.getElementById('checkinForm').style.display = 'flex';
-            document.getElementById('formContent').innerHTML = `
-                <div style="text-align:center; padding:20px; color:var(--gold);">
-                    <div style="font-size:30px; margin-bottom:10px;">✨</div>
-                    <strong>Bugün zaten check-in yaptın!</strong><br>
-                    <span style="font-size:12px; color:var(--gray); display:block; margin-top:10px;">Yarın yeni kodla tekrar görüşmek üzere.</span>
-                </div>`;
+            document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Bugün zaten check-in yaptın! ✨</div>";
+            document.getElementById('successStamp').style.opacity = "1";
         }
     }
 
-    document.getElementById('checkinForm').addEventListener('submit', function() {
-        localStorage.setItem('temas_last_send', new Date().toLocaleDateString());
-    });
+    // DİNAMİK ÜYE SAYISI
+    setInterval(() => {
+        const count = Math.floor(Math.random() * (26 - 12 + 1)) + 12;
+        document.getElementById('liveCount').innerText = count;
+    }, 5000);
 
     function toggleAudio() {
       const a = document.getElementById('vibe-audio');
@@ -225,8 +219,7 @@
     }
 
     function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
-
+    
     function checkCode() {
       if(document.getElementById('passCode').value.toUpperCase() === correctCode) {
         document.getElementById('loginModal').style.display = 'none';
@@ -236,7 +229,7 @@
         document.getElementById('membershipCard').style.display = 'flex';
         checkSubmissionStatus();
         window.scrollTo(0,0);
-      } else { alert("Hatalı kod."); }
+      } else { alert("Kod hatalı."); }
     }
 
     function showForm() {
