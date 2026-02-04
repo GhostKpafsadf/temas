@@ -1,18 +1,3 @@
-Mevcut şifreli giriş sistemini ve tasarımını bozmadan, siteye o "premium uygulama" hissini verecek profesyonel görsel detaylar ekledim.
-
-Bu güncelleme ile şunlar değişti:
-
-Cam Efekti (Glassmorphism): Giriş kutusu (modal) ve butonlar artık hafif şeffaf ve arkadaki içeriği buzlu cam gibi gösteriyor.
-
-Yumuşak Geçişler: Butonlara ve modal açılışına zarif animasyonlar eklendi.
-
-Gelişmiş Tipografi: Yazıların okunabilirliği ve harf boşlukları (kerning) profesyonel standartlara çekildi.
-
-Mobil Uyumluluk: Telefon ekranlarında "native app" (gerçek uygulama) gibi görünmesi için gölgelendirmeler iyileştirildi.
-
-İşte güncel index.html kodun:
-
-HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -26,237 +11,259 @@ HTML
       --gray: #888; 
       --border: rgba(255, 255, 255, 0.1); 
       --active-green: #4ade80; 
-      --accent: #ffffff;
     }
     
+    /* Temel Ayarlar */
     body { 
       margin: 0; 
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
       background: var(--bg); 
       color: var(--text); 
-      text-align: center;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
     }
 
+    /* Gereksiz üst yazıları engellemek için ana taşıyıcı */
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+    }
+
+    /* ANA EKRAN (Hero) */
     .hero { 
-      min-height: 100vh; 
+      height: 100vh; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
-      padding: 40px 20px; 
-      background: radial-gradient(circle at center, #111 0%, #000 70%);
+      padding: 0 20px; 
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      box-sizing: border-box;
     }
 
-    .logo-container { font-size: 60px; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
-    
+    /* LOGO ALANI */
+    .logo-img {
+      width: 85px;
+      height: 85px;
+      margin-bottom: 15px;
+      border-radius: 22px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     h1 { 
-      font-size: 48px; 
+      font-size: 42px; 
       margin: 0; 
-      letter-spacing: 6px; 
+      letter-spacing: 5px; 
       font-weight: 900; 
-      background: linear-gradient(to bottom, #fff 0%, #888 100%);
+      background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .badge { 
-      display: inline-block; 
-      margin: 20px 0; 
+      margin: 15px 0; 
       padding: 6px 16px; 
       border: 1px solid var(--border); 
       border-radius: 30px; 
       font-size: 11px; 
-      letter-spacing: 2px; 
-      text-transform: uppercase; 
+      letter-spacing: 1px; 
       color: var(--gray);
-      background: rgba(255,255,255,0.03);
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.02);
     }
 
-    /* AKTİF KONUM KARTI */
-    .active-location-card { 
-      margin-top: 40px; 
-      width: 100%; 
-      max-width: 340px; 
-      perspective: 1000px;
+    /* AKTİF KART VE BUTON */
+    .active-card {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 340px;
     }
 
-    .status-label { 
-      font-size: 10px; 
-      font-weight: 800; 
-      color: var(--active-green); 
-      text-transform: uppercase; 
-      margin-bottom: 12px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
+    .status {
+      font-size: 10px;
+      color: var(--active-green);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 6px;
+      font-weight: 800;
       letter-spacing: 1px;
     }
 
     .dot { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 10px var(--active-green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.2); } }
 
-    .main-btn { 
-      display: block; 
-      padding: 24px; 
-      background: var(--accent); 
-      color: #000; 
-      text-decoration: none; 
-      border-radius: 20px; 
-      font-weight: 800; 
-      font-size: 20px; 
-      cursor: pointer; 
-      border: none; 
-      width: 100%; 
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+    .btn {
+      display: block;
+      padding: 22px;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 18px;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
+    .btn:active { transform: scale(0.96); }
+
+    /* KAYDIRMA İPUCU */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      color: var(--gray);
+      font-size: 12px;
+      animation: bounce 2s infinite;
+      cursor: pointer;
+    }
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-8px);} 60% {transform: translateY(-4px);} }
+
+    /* İÇERİK BÖLÜMLERİ (Aşağı kaydırınca gelen) */
+    .content-section {
+      padding: 80px 30px;
+      max-width: 450px;
+      margin: 0 auto;
+      text-align: left;
+      border-top: 1px solid var(--border);
+    }
+
+    h2 { font-size: 26px; margin-bottom: 25px; font-weight: 800; letter-spacing: -0.5px; }
     
-    .main-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255,255,255,0.15); }
-    .main-btn:active { transform: translateY(0) scale(0.98); }
-    .main-btn span { display: block; font-size: 12px; font-weight: 500; margin-top: 6px; opacity: 0.5; letter-spacing: 0.5px; }
+    .info-card {
+      background: rgba(255,255,255,0.03);
+      padding: 24px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 15px;
+      transition: background 0.3s;
+    }
+    .info-card:hover { background: rgba(255,255,255,0.05); }
 
-    /* ŞİFRE MODAL (Glassmorphism) */
+    .info-card strong { color: #fff; display: block; margin-bottom: 8px; font-size: 17px; }
+    .info-card p { margin: 0; color: var(--gray); font-size: 15px; line-height: 1.5; }
+
+    /* GİRİŞ MODALI */
     #loginModal { 
-      display: none; 
-      position: fixed; 
-      top: 0; left: 0; 
-      width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.85); 
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 100; 
-      align-items: center; 
-      justify-content: center; 
-      animation: fadeIn 0.3s ease;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center;
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .modal-content { 
-      background: rgba(20, 20, 20, 0.8); 
-      padding: 40px 30px; 
-      border-radius: 28px; 
-      border: 1px solid var(--border); 
-      width: 85%; 
-      max-width: 320px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    .modal-box { 
+      background: #111; padding: 40px 30px; border-radius: 30px; 
+      border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     input { 
-      width: 100%; 
-      padding: 16px; 
-      margin: 20px 0; 
-      border-radius: 14px; 
-      border: 1px solid var(--border); 
-      background: rgba(255,255,255,0.05); 
-      color: #fff; 
-      text-align: center; 
-      font-size: 20px; 
-      font-weight: 600;
-      box-sizing: border-box; 
-      outline: none;
-      transition: border 0.3s;
-    }
-    input:focus { border-color: #555; }
-
-    .login-submit { 
-      background: #fff; 
-      color: #000; 
-      border: none; 
-      padding: 16px; 
-      border-radius: 14px; 
-      font-weight: 700; 
-      width: 100%; 
-      cursor: pointer; 
-      font-size: 16px;
-      transition: opacity 0.2s;
-    }
-    .login-submit:hover { opacity: 0.9; }
-
-    /* PASİF KONUMLAR */
-    .other-locations { margin-top: 50px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 350px; }
-    .loc-tag-disabled { 
-      padding: 10px 18px; 
-      background: rgba(255,255,255,0.03); 
-      border: 1px solid var(--border); 
-      border-radius: 12px; 
-      font-size: 12px; 
-      color: #444; 
-      font-weight: 500;
+      width: 100%; padding: 18px; margin: 20px 0; border-radius: 15px; 
+      border: 1px solid var(--border); background: #000; color: #fff; 
+      font-size: 20px; text-align: center; outline: none; box-sizing: border-box;
     }
 
-    .instagram-link { 
-      margin-top: 60px; 
-      display: inline-block; 
-      color: var(--gray); 
-      text-decoration: none; 
-      font-size: 13px; 
-      letter-spacing: 0.5px;
-      transition: color 0.3s;
+    .footer-link {
+      margin-top: 50px; text-align: center; padding-bottom: 50px;
     }
-    .instagram-link:hover { color: #fff; }
+    .footer-link a { color: var(--gray); text-decoration: none; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 2px; }
   </style>
 </head>
 <body>
 
+<div class="main-wrapper">
   <div class="hero">
-    <div class="logo-container">✨</div>
+    <div class="logo-img">
+      <img src="logo.png" alt="" style="max-width:100%; border-radius:18px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:40px\'>T</span>'">
+    </div>
+    
     <h1>TEMAS</h1>
-    <div class="badge">ANKARA • LIMITED ACCESS</div>
+    <div class="badge">Ankara • Sınırlı Erişim</div>
 
-    <div class="active-location-card">
-      <div class="status-label"><span class="dot"></span> Live at Ankamall</div>
-      <button onclick="openModal()" class="main-btn">
-        CHECK-IN
-        <span>Günlük giriş kodu gereklidir</span>
-      </button>
+    <div class="active-card">
+      <div class="status"><span class="dot"></span> ŞU AN AKTİF: ANKAMALL</div>
+      <button onclick="openModal()" class="btn">Giriş Yap</button>
     </div>
 
-    <div class="other-locations">
-      <div class="loc-tag-disabled">Armada</div>
-      <div class="loc-tag-disabled">Bahçelievler</div>
-      <div class="loc-tag-disabled">Tunalı</div>
-      <div class="loc-tag-disabled">Maidan</div>
-    </div>
-
-    <a href="https://instagram.com/temas_ankara" class="instagram-link">Get Code: @temas_ankara</a>
+    <div class="scroll-hint" onclick="window.scrollTo(0, window.innerHeight)">Bilgi için kaydır ↓</div>
   </div>
 
-  <div id="loginModal">
-    <div class="modal-content">
-      <h3 style="margin:0; font-size:22px;">Giriş Yap</h3>
-      <p style="font-size:13px; color:var(--gray); margin-top:10px;">Günün kodunu Instagram hikayelerimizde bulabilirsin.</p>
-      <input type="text" id="passCode" placeholder="••••••" spellcheck="false" autocomplete="off">
-      <button class="login-submit" onclick="checkCode()">Devam Et</button>
-      <button onclick="closeModal()" style="background:none; border:none; color:#444; margin-top:20px; font-size:12px; cursor:pointer; font-weight:600;">Geri Dön</button>
+  <div class="content-section">
+    <h2>Temas Nedir?</h2>
+    <div class="info-card">
+      <strong>Dijitalden Gerçeğe</strong>
+      <p>Sadece aynı mekanda olduğun kişileri keşfetmeni sağlayan, vaktini yazışarak değil tanışarak harcamanı isteyen bir Ankara topluluğu.</p>
+    </div>
+    <div class="info-card">
+      <strong>Sadece Onaylı Üyeler</strong>
+      <p>Güvenliği ve kaliteyi korumak adına sadece günlük davet koduna sahip olanlar sisteme giriş yapabilir.</p>
     </div>
   </div>
 
-  <script>
-    // GÜNLÜK KODU BURADAN DEĞİŞTİR
-    const correctCode = "ANKARA06"; 
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform";
+  <div class="content-section">
+    <h2>Nasıl Çalışır?</h2>
+    <div class="info-card">
+      <strong>1. Kodu Al</strong>
+      <p>Instagram adresimizden paylaşılan güncel giriş kodunu edin.</p>
+    </div>
+    <div class="info-card">
+      <strong>2. Check-in Yap</strong>
+      <p>Aktif mekanda olduğunu doğrula ve kimlerin orada olduğunu gör.</p>
+    </div>
+    <div class="info-card">
+      <strong>3. İlk Teması Kur</strong>
+      <p>Sistem seni uygun biriyle eşleştirdiğinde hemen tanışma adımına geç.</p>
+    </div>
+  </div>
 
-    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+  <div class="footer-link">
+    <a href="https://instagram.com/temas_ankara" target="_blank">@temas_ankara</a>
+  </div>
+</div>
 
-    function checkCode() {
-      const input = document.getElementById('passCode').value;
-      if(input.toUpperCase() === correctCode) {
-        window.location.href = formUrl;
-      } else {
-        alert("Üzgünüz, bu kod geçersiz.");
-        document.getElementById('passCode').value = "";
-      }
+<div id="loginModal">
+  <div class="modal-box">
+    <h3 style="margin:0; font-size:24px;">Giriş</h3>
+    <p style="font-size:14px; color:var(--gray); margin-top:10px;">Lütfen bugünün özel kodunu girin.</p>
+    <input type="text" id="passCode" placeholder="Kod" autocomplete="off" spellcheck="false">
+    <button class="btn" onclick="checkCode()" style="padding:16px; font-size:16px;">Devam Et</button>
+    <button onclick="closeModal()" style="background:none; border:none; color:#555; margin-top:20px; cursor:pointer; font-weight:600;">Kapat</button>
+  </div>
+</div>
+
+<script>
+  // GÜNLÜK KODU BURADAN DEĞİŞTİRİN
+  const correctCode = "ANKARA06"; 
+  const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform";
+
+  function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+  function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+  function checkCode() {
+    const val = document.getElementById('passCode').value.trim().toUpperCase();
+    if(val === correctCode) {
+      window.location.href = formUrl;
+    } else {
+      alert("Hatalı veya süresi dolmuş kod.");
+      document.getElementById('passCode').value = "";
     }
+  }
 
-    // Enter tuşu ile giriş yapma özelliği
-    document.getElementById('passCode').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') { checkCode(); }
-    });
-  </script>
+  // Enter tuşu desteği
+  document.getElementById('passCode').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') { checkCode(); }
+  });
+</script>
 
 </body>
 </html>
