@@ -5,25 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>TEMAS | Ankara</title>
   <style>
-    :root { --bg: #000; --text: #fff; --gray: #888; --border: #333; }
+    :root { --bg: #000; --text: #fff; --gray: #888; --border: #333; --active-green: #4ade80; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       text-align: center;
-      scroll-behavior: smooth;
     }
-    /* Ana Bölüm */
     .hero {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 40px 20px;
     }
-    .logo-container { margin-bottom: 20px; font-size: 50px; }
+    .logo-container { font-size: 50px; margin-bottom: 10px; }
     h1 { font-size: 42px; margin: 0; letter-spacing: 4px; font-weight: 900; }
     .badge {
       display: inline-block;
@@ -36,65 +34,69 @@
       text-transform: uppercase;
       color: var(--gray);
     }
-    .hero p { opacity: 0.7; line-height: 1.6; font-size: 16px; max-width: 320px; }
-    
-    /* Butonlar */
-    .cta-button {
-      display: block;
-      margin-top: 25px;
-      padding: 18px 40px;
-      border-radius: 50px;
-      background: #ffffff;
-      color: #000;
-      text-decoration: none;
-      font-weight: 800;
-      transition: transform 0.2s ease;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
-    }
-    .cta-button:active { transform: scale(0.96); }
 
-    /* Canlı Durum */
-    .live-status {
-      margin-top: 20px;
-      font-size: 13px;
-      color: #4ade80; /* Yeşil */
+    /* AKTİF KONUM BUTONU */
+    .active-location-card {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 320px;
+    }
+    .status-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--active-green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 5px;
     }
-    .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 1.5s infinite; }
+    .dot { width: 7px; height: 7px; background: var(--active-green); border-radius: 50%; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-    /* Bilgi Bölümleri */
-    .section { padding: 60px 20px; border-top: 1px solid var(--border); }
-    h2 { font-size: 24px; margin-bottom: 30px; letter-spacing: 1px; }
-    
-    /* Adımlar */
-    .steps { display: grid; gap: 30px; max-width: 400px; margin: 0 auto; }
-    .step { text-align: center; }
-    .step-icon { font-size: 30px; margin-bottom: 10px; display: block; }
-    .step-title { font-weight: 700; margin-bottom: 5px; display: block; }
-    .step-desc { font-size: 14px; color: var(--gray); line-height: 1.4; }
+    .main-btn {
+      display: block;
+      padding: 20px;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      border-radius: 15px;
+      font-weight: 800;
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+    .main-btn:active { transform: scale(0.96); }
+    .main-btn span { display: block; font-size: 12px; font-weight: 400; margin-top: 4px; opacity: 0.6; }
 
-    /* Mekanlar */
-    .locations { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-    .loc-tag {
+    /* PASİF KONUMLAR */
+    .other-locations {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      max-width: 350px;
+      opacity: 0.4; /* Pasif olduklarını belli eder */
+    }
+    .loc-tag-disabled {
       padding: 8px 16px;
       background: #111;
       border: 1px solid var(--border);
       border-radius: 10px;
-      font-size: 13px;
-      color: #ccc;
+      font-size: 12px;
+      color: #666;
+      cursor: not-allowed;
     }
 
     .instagram-link {
+      margin-top: 50px;
       display: inline-block;
-      margin: 40px 0;
       color: var(--text);
       text-decoration: none;
-      font-size: 14px;
-      opacity: 0.6;
-      border-bottom: 1px solid #444;
+      font-size: 13px;
+      opacity: 0.5;
+      border-bottom: 1px solid #333;
     }
   </style>
 </head>
@@ -103,55 +105,31 @@
   <div class="hero">
     <div class="logo-container">✨</div>
     <h1>TEMAS</h1>
-    <div class="badge">Sadece Davetle • Ankara</div>
-    <p>Aynı yerde olduğun insanlar. Kaydırma yok. Rastgelelik yok. Sadece gerçek temas.</p>
-    
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform" class="cta-button">Başvuru Yapmak İçin</a>
+    <div class="badge">Ankara • Günün Mekanı</div>
 
-    <div class="live-status">
-      <span class="dot"></span> Şu an Ankara'da 140+ kişi aktif
-    </div>
-    
-    <a href="#how" style="color:white; margin-top:40px; text-decoration:none; font-size:20px;">↓</a>
-  </div>
-
-  <div id="how" class="section">
-    <h2>Nasıl Çalışır?</h2>
-    <div class="steps">
-      <div class="step">
-        <span class="step-icon">📍</span>
-        <span class="step-title">1. Check-in</span>
-        <span class="step-desc">Ankara'da bulunduğun popüler noktayı form üzerinden bildir.</span>
+    <div class="active-location-card">
+      <div class="status-label">
+        <span class="dot"></span> Aktif Konum!
       </div>
-      <div class="step">
-        <span class="step-icon">🤝</span>
-        <span class="step-title">2. Temas</span>
-        <span class="step-desc">Seninle aynı anda orada olan ve kriterlerine uyan biriyle eşleş.</span>
-      </div>
-      <div class="step">
-        <span class="step-icon">☕</span>
-        <span class="step-title">3. Buluş</span>
-        <span class="step-desc">Yazışarak vakit kaybetme, hemen yandaki masada bir kahve iç.</span>
-      </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform" class="main-btn">
+        ANKAMALL
+        <span>Eşleşmeleri görmek için giriş yap</span>
+      </a>
     </div>
-  </div>
 
-  <div class="section">
-    <h2>Aktif Noktalar</h2>
-    <div class="locations">
-      <div class="loc-tag">Ankamall</div>
-      <div class="loc-tag">Armada</div>
-      <div class="loc-tag">Bahçelievler 7.</div>
-      <div class="loc-tag">Tunalı Hilmi</div>
-      <div class="loc-tag">Maidan</div>
-      <div class="loc-tag">Kuzu Effect</div>
-      <div class="loc-tag">Arcadium</div>
+    <div class="other-locations">
+      <div class="loc-tag-disabled">Armada</div>
+      <div class="loc-tag-disabled">Bahçelievler</div>
+      <div class="loc-tag-disabled">Tunalı Hilmi</div>
+      <div class="loc-tag-disabled">Maidan</div>
+      <div class="loc-tag-disabled">Kuzu Effect</div>
     </div>
-  </div>
 
-  <div class="section" style="border-bottom:none;">
-    <p style="font-size:12px; margin-bottom:20px;">Üyelik başvuruları manuel olarak incelenmektedir.</p>
-    <a href="https://instagram.com/temas_ankara" class="instagram-link">Bizi Instagram'da Takip Et</a>
+    <p style="font-size: 13px; color: #555; margin-top: 30px; max-width: 280px;">
+      Sadece aktif olan konumdaki kişiler birbirleriyle temas kurabilir.
+    </p>
+
+    <a href="https://instagram.com/temas_ankara" class="instagram-link">@temas_ankara</a>
   </div>
 
 </body>
