@@ -1,3 +1,18 @@
+Mevcut şifreli giriş sistemini ve tasarımını bozmadan, siteye o "premium uygulama" hissini verecek profesyonel görsel detaylar ekledim.
+
+Bu güncelleme ile şunlar değişti:
+
+Cam Efekti (Glassmorphism): Giriş kutusu (modal) ve butonlar artık hafif şeffaf ve arkadaki içeriği buzlu cam gibi gösteriyor.
+
+Yumuşak Geçişler: Butonlara ve modal açılışına zarif animasyonlar eklendi.
+
+Gelişmiş Tipografi: Yazıların okunabilirliği ve harf boşlukları (kerning) profesyonel standartlara çekildi.
+
+Mobil Uyumluluk: Telefon ekranlarında "native app" (gerçek uygulama) gibi görünmesi için gölgelendirmeler iyileştirildi.
+
+İşte güncel index.html kodun:
+
+HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -5,99 +20,183 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>TEMAS | Ankara</title>
   <style>
-    :root { --bg: #000; --text: #fff; --gray: #888; --border: #333; --active-green: #4ade80; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+    :root { 
+      --bg: #000; 
+      --text: #fff; 
+      --gray: #888; 
+      --border: rgba(255, 255, 255, 0.1); 
+      --active-green: #4ade80; 
+      --accent: #ffffff;
+    }
+    
+    body { 
+      margin: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
       text-align: center;
+      -webkit-font-smoothing: antialiased;
     }
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+
+    .hero { 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 40px 20px; 
+      background: radial-gradient(circle at center, #111 0%, #000 70%);
     }
-    .logo-container { font-size: 50px; margin-bottom: 10px; }
-    h1 { font-size: 42px; margin: 0; letter-spacing: 4px; font-weight: 900; }
-    .badge {
-      display: inline-block;
-      margin: 15px 0;
-      padding: 6px 14px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+
+    .logo-container { font-size: 60px; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+    
+    h1 { 
+      font-size: 48px; 
+      margin: 0; 
+      letter-spacing: 6px; 
+      font-weight: 900; 
+      background: linear-gradient(to bottom, #fff 0%, #888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge { 
+      display: inline-block; 
+      margin: 20px 0; 
+      padding: 6px 16px; 
+      border: 1px solid var(--border); 
+      border-radius: 30px; 
+      font-size: 11px; 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
       color: var(--gray);
+      background: rgba(255,255,255,0.03);
     }
 
-    /* AKTİF KONUM BUTONU */
-    .active-location-card {
-      margin-top: 30px;
-      width: 100%;
+    /* AKTİF KONUM KARTI */
+    .active-location-card { 
+      margin-top: 40px; 
+      width: 100%; 
+      max-width: 340px; 
+      perspective: 1000px;
+    }
+
+    .status-label { 
+      font-size: 10px; 
+      font-weight: 800; 
+      color: var(--active-green); 
+      text-transform: uppercase; 
+      margin-bottom: 12px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 6px;
+      letter-spacing: 1px;
+    }
+
+    .dot { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 10px var(--active-green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+
+    .main-btn { 
+      display: block; 
+      padding: 24px; 
+      background: var(--accent); 
+      color: #000; 
+      text-decoration: none; 
+      border-radius: 20px; 
+      font-weight: 800; 
+      font-size: 20px; 
+      cursor: pointer; 
+      border: none; 
+      width: 100%; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+    }
+    
+    .main-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255,255,255,0.15); }
+    .main-btn:active { transform: translateY(0) scale(0.98); }
+    .main-btn span { display: block; font-size: 12px; font-weight: 500; margin-top: 6px; opacity: 0.5; letter-spacing: 0.5px; }
+
+    /* ŞİFRE MODAL (Glassmorphism) */
+    #loginModal { 
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.85); 
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100; 
+      align-items: center; 
+      justify-content: center; 
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-content { 
+      background: rgba(20, 20, 20, 0.8); 
+      padding: 40px 30px; 
+      border-radius: 28px; 
+      border: 1px solid var(--border); 
+      width: 85%; 
       max-width: 320px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
-    .status-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--active-green);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-    .dot { width: 7px; height: 7px; background: var(--active-green); border-radius: 50%; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-    .main-btn {
-      display: block;
-      padding: 20px;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
-      border-radius: 15px;
-      font-weight: 800;
-      font-size: 18px;
-      transition: transform 0.2s;
+    input { 
+      width: 100%; 
+      padding: 16px; 
+      margin: 20px 0; 
+      border-radius: 14px; 
+      border: 1px solid var(--border); 
+      background: rgba(255,255,255,0.05); 
+      color: #fff; 
+      text-align: center; 
+      font-size: 20px; 
+      font-weight: 600;
+      box-sizing: border-box; 
+      outline: none;
+      transition: border 0.3s;
     }
-    .main-btn:active { transform: scale(0.96); }
-    .main-btn span { display: block; font-size: 12px; font-weight: 400; margin-top: 4px; opacity: 0.6; }
+    input:focus { border-color: #555; }
+
+    .login-submit { 
+      background: #fff; 
+      color: #000; 
+      border: none; 
+      padding: 16px; 
+      border-radius: 14px; 
+      font-weight: 700; 
+      width: 100%; 
+      cursor: pointer; 
+      font-size: 16px;
+      transition: opacity 0.2s;
+    }
+    .login-submit:hover { opacity: 0.9; }
 
     /* PASİF KONUMLAR */
-    .other-locations {
-      margin-top: 40px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      max-width: 350px;
-      opacity: 0.4; /* Pasif olduklarını belli eder */
-    }
-    .loc-tag-disabled {
-      padding: 8px 16px;
-      background: #111;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 12px;
-      color: #666;
-      cursor: not-allowed;
+    .other-locations { margin-top: 50px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 350px; }
+    .loc-tag-disabled { 
+      padding: 10px 18px; 
+      background: rgba(255,255,255,0.03); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      font-size: 12px; 
+      color: #444; 
+      font-weight: 500;
     }
 
-    .instagram-link {
-      margin-top: 50px;
-      display: inline-block;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 13px;
-      opacity: 0.5;
-      border-bottom: 1px solid #333;
+    .instagram-link { 
+      margin-top: 60px; 
+      display: inline-block; 
+      color: var(--gray); 
+      text-decoration: none; 
+      font-size: 13px; 
+      letter-spacing: 0.5px;
+      transition: color 0.3s;
     }
+    .instagram-link:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -105,32 +204,59 @@
   <div class="hero">
     <div class="logo-container">✨</div>
     <h1>TEMAS</h1>
-    <div class="badge">Ankara • Günün Mekanı</div>
+    <div class="badge">ANKARA • LIMITED ACCESS</div>
 
     <div class="active-location-card">
-      <div class="status-label">
-        <span class="dot"></span> Aktif Konum!
-      </div>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform" class="main-btn">
-        ANKAMALL
-        <span>Eşleşmeleri görmek için giriş yap</span>
-      </a>
+      <div class="status-label"><span class="dot"></span> Live at Ankamall</div>
+      <button onclick="openModal()" class="main-btn">
+        CHECK-IN
+        <span>Günlük giriş kodu gereklidir</span>
+      </button>
     </div>
 
     <div class="other-locations">
       <div class="loc-tag-disabled">Armada</div>
       <div class="loc-tag-disabled">Bahçelievler</div>
-      <div class="loc-tag-disabled">Tunalı Hilmi</div>
+      <div class="loc-tag-disabled">Tunalı</div>
       <div class="loc-tag-disabled">Maidan</div>
-      <div class="loc-tag-disabled">Kuzu Effect</div>
     </div>
 
-    <p style="font-size: 13px; color: #555; margin-top: 30px; max-width: 280px;">
-      Sadece aktif olan konumdaki kişiler birbirleriyle temas kurabilir.
-    </p>
-
-    <a href="https://instagram.com/temas_ankara" class="instagram-link">@temas_ankara</a>
+    <a href="https://instagram.com/temas_ankara" class="instagram-link">Get Code: @temas_ankara</a>
   </div>
+
+  <div id="loginModal">
+    <div class="modal-content">
+      <h3 style="margin:0; font-size:22px;">Giriş Yap</h3>
+      <p style="font-size:13px; color:var(--gray); margin-top:10px;">Günün kodunu Instagram hikayelerimizde bulabilirsin.</p>
+      <input type="text" id="passCode" placeholder="••••••" spellcheck="false" autocomplete="off">
+      <button class="login-submit" onclick="checkCode()">Devam Et</button>
+      <button onclick="closeModal()" style="background:none; border:none; color:#444; margin-top:20px; font-size:12px; cursor:pointer; font-weight:600;">Geri Dön</button>
+    </div>
+  </div>
+
+  <script>
+    // GÜNLÜK KODU BURADAN DEĞİŞTİR
+    const correctCode = "ANKARA06"; 
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform";
+
+    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+    function checkCode() {
+      const input = document.getElementById('passCode').value;
+      if(input.toUpperCase() === correctCode) {
+        window.location.href = formUrl;
+      } else {
+        alert("Üzgünüz, bu kod geçersiz.");
+        document.getElementById('passCode').value = "";
+      }
+    }
+
+    // Enter tuşu ile giriş yapma özelliği
+    document.getElementById('passCode').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { checkCode(); }
+    });
+  </script>
 
 </body>
 </html>
