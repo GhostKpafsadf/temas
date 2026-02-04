@@ -27,7 +27,6 @@
       min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
       justify-content: center; padding: 60px 20px; box-sizing: border-box;
       background: radial-gradient(circle at center, #111 0%, #000 100%);
-      transition: opacity 0.5s ease;
     }
 
     .heatmap {
@@ -72,7 +71,6 @@
       opacity: 0; transition: 0.5s; pointer-events: none;
     }
 
-    /* FORM ALANI */
     .internal-form {
       width: 100%; max-width: 320px; display: none; flex-direction: column; gap: 12px;
       background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border);
@@ -85,13 +83,22 @@
     }
     .internal-form textarea { min-height: 80px; resize: none; }
 
-    /* MODAL */
     #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; backdrop-filter:blur(15px); }
     .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
     #passCode { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:22px; outline:none; }
+
+    /* KONUM UYARISI */
+    #locationOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; box-sizing: border-box; }
   </style>
 </head>
 <body onload="checkTime()">
+
+  <div id="locationOverlay">
+    <div style="font-size: 50px; margin-bottom: 20px;">📍</div>
+    <h2>Bölge Kısıtlaması</h2>
+    <p style="color: var(--gray);">TEMAS'a erişmek için Ankara sınırları içerisinde olmalısın.</p>
+    <button class="btn" onclick="requestLocation()">Konumu Doğrula</button>
+  </div>
 
   <audio id="vibe-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3"></audio>
   <div class="audio-toggle" onclick="toggleAudio()">🔈</div>
@@ -113,7 +120,7 @@
   </div>
 
   <div id="membershipCard">
-    <div class="card-3d">
+    <div class="card-3d" id="cardArea">
       <div class="card-stamp" id="successStamp">AKTİF</div>
       <div style="font-size:10px; letter-spacing:4px; color:var(--gold); opacity:0.8;">VIP MEMBERSHIP</div>
       <div style="font-size:32px; font-weight:900; letter-spacing:6px;">TEMAS</div>
@@ -124,6 +131,8 @@
       </div>
       <div style="font-size:11px; color:var(--active-green); font-weight:bold; letter-spacing:2px; border:1px solid var(--active-green); padding:5px 15px; border-radius:10px;">ERİŞİM ONAYLANDI</div>
     </div>
+
+    <button id="shareBtn" class="btn" style="display:none; background:transparent; color:#fff; border:1px solid var(--border); margin-bottom:20px;" onclick="shareCard()">✨ Kartını Paylaş</button>
 
     <form id="checkinForm" class="internal-form">
       <div id="formContent">
@@ -168,12 +177,56 @@
   </div>
 
   <script>
-    const correctCode = "ANKARA06"; 
+    const correctCode = "ANKARA06";
 
-    // FORM GÖNDERİMİ (AJAX - Sitede Kalma)
+    // 1. HAPTIC FEEDBACK (TİTREŞİM)
+    function vibrate(ms = 50) {
+      if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    // 2. KONUM DOĞRULAMA (Sadece Ankara)
+    function requestLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                // Ankara koordinat sınırları (Yaklaşık)
+                if (lat > 39.0 && lat < 41.0 && lon > 32.0 && lon < 34.0) {
+                    document.getElementById('locationOverlay').style.display = 'none';
+                    localStorage.setItem('location_verified', 'true');
+                } else {
+                    alert("Maalesef sadece Ankara içerisinden erişim sağlanabilir.");
+                }
+            }, () => alert("Konum izni verilmedi."));
+        }
+    }
+
+    // Başlangıçta konumu kontrol et
+    if (!localStorage.getItem('location_verified')) {
+        document.getElementById('locationOverlay').style.display = 'flex';
+    }
+
+    // 3. GELİŞMİŞ PAYLAŞ BUTONU
+    async function shareCard() {
+        vibrate(100);
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'TEMAS VIP Kartım',
+                    text: 'Bugün Ankara TEMAS kulübündeyim! #TEMASAnkara',
+                    url: window.location.href
+                });
+            } catch (err) { console.log("Paylaşım iptal edildi."); }
+        } else {
+            alert("Paylaşım bu tarayıcıda desteklenmiyor, ekran görüntüsü alabilirsin!");
+        }
+    }
+
+    // FORM GÖNDERİMİ
     const form = document.getElementById("checkinForm");
     form.addEventListener("submit", function(e) {
         e.preventDefault();
+        vibrate([50, 30, 50]); // Başarılı basım titreşimi
         const btn = document.getElementById("submitBtn");
         btn.disabled = true;
         btn.innerText = "Gönderiliyor...";
@@ -186,12 +239,13 @@
         }).then(response => {
             if (response.ok) {
                 localStorage.setItem('temas_last_send', new Date().toLocaleDateString());
-                document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Kayıt Başarıyla Alındı! ✨</div>";
+                document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Aramıza hoş geldin! ✨</div>";
                 document.getElementById('successStamp').style.opacity = "1";
+                document.getElementById('shareBtn').style.display = 'block';
+                vibrate(200);
             } else {
-                alert("Bir hata oluştu, tekrar dene.");
+                alert("Hata oluştu.");
                 btn.disabled = false;
-                btn.innerText = "Check-in Yap";
             }
         });
     });
@@ -203,14 +257,9 @@
             document.getElementById('checkinForm').style.display = 'flex';
             document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Bugün zaten check-in yaptın! ✨</div>";
             document.getElementById('successStamp').style.opacity = "1";
+            document.getElementById('shareBtn').style.display = 'block';
         }
     }
-
-    // DİNAMİK ÜYE SAYISI
-    setInterval(() => {
-        const count = Math.floor(Math.random() * (26 - 12 + 1)) + 12;
-        document.getElementById('liveCount').innerText = count;
-    }, 5000);
 
     function toggleAudio() {
       const a = document.getElementById('vibe-audio');
@@ -218,10 +267,11 @@
       else { a.pause(); document.querySelector('.audio-toggle').innerText = '🔈'; }
     }
 
-    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function openModal() { vibrate(20); document.getElementById('loginModal').style.display = 'flex'; }
     
     function checkCode() {
       if(document.getElementById('passCode').value.toUpperCase() === correctCode) {
+        vibrate([100, 50, 100]);
         document.getElementById('loginModal').style.display = 'none';
         const rand = Math.floor(1000 + Math.random() * 9000);
         document.getElementById('randomID').innerText = `#TM-${rand}`;
@@ -233,6 +283,7 @@
     }
 
     function showForm() {
+      vibrate(20);
       document.getElementById('showFormBtn').style.display = 'none';
       document.getElementById('checkinForm').style.display = 'flex';
     }
