@@ -15,21 +15,18 @@
       background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
     }
 
-    /* SES KONTROLÜ */
     .audio-toggle {
       position: fixed; top: 20px; right: 20px; z-index: 2000;
       background: rgba(255,255,255,0.05); border: 1px solid var(--border);
       padding: 10px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(10px);
     }
 
-    /* ANA EKRAN */
     .hero { 
       min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
       justify-content: center; padding: 60px 20px; box-sizing: border-box;
       background: radial-gradient(circle at center, #111 0%, #000 100%);
     }
 
-    /* YOĞUNLUK HARİTASI (HEATMAP) */
     .heatmap {
       display: flex; gap: 15px; margin-bottom: 25px; background: rgba(255,255,255,0.03);
       padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); font-size: 11px;
@@ -41,11 +38,9 @@
     .logo-img { width: 80px; height: 80px; margin-bottom: 15px; border-radius: 22px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 40px; }
     h1 { font-size: 44px; margin: 0; letter-spacing: 8px; font-weight: 900; text-transform: uppercase; }
 
-    /* GERİ SAYIM */
     .timer-box { margin: 15px 0; font-size: 13px; color: var(--gray); letter-spacing: 1px; }
     #timer { color: #fff; font-weight: 700; }
 
-    /* BUTON */
     .btn {
       display: block; padding: 22px; background: #fff; color: #000; 
       text-decoration: none; border-radius: 20px; font-weight: 800; 
@@ -54,19 +49,22 @@
     }
     .btn:active { transform: scale(0.96); }
 
-    /* 3D ÜYELİK KARTI (Girişten Sonra) */
+    /* VIP KART EKRANI */
     #membershipCard {
       display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
       background: #000; z-index: 3000; align-items: center; justify-content: center; flex-direction: column;
     }
     .card-3d {
-      width: 300px; height: 450px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+      width: 280px; height: 420px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
       border-radius: 20px; border: 1px solid var(--gold); position: relative;
       box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); transform-style: preserve-3d;
-      animation: rotateCard 5s infinite linear; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px;
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px;
+      animation: cardEntrance 0.8s ease-out;
     }
-    @keyframes rotateCard { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+    @keyframes cardEntrance { from { opacity: 0; transform: scale(0.8) rotateY(90deg); } to { opacity: 1; transform: scale(1) rotateY(0deg); } }
     
+    .member-id { font-family: monospace; color: var(--gold); font-size: 14px; margin-top: 10px; }
+
     /* MODAL */
     #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(20px); }
     .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
@@ -90,14 +88,11 @@
     </div>
 
     <div class="logo-img">✨</div>
-    
     <h1 id="main-title">TEMAS</h1>
     <div class="badge">ANKARA • VIP ACCESS</div>
 
     <div class="timer-box">Günün Teması Kapanıyor: <span id="timer">00:00:00</span></div>
-
     <button onclick="openModal()" class="btn">Giriş Yap</button>
-
     <div style="margin-top: 50px; color: var(--gray); font-size: 11px; letter-spacing: 2px; animation: bounce 2s infinite;">AŞAĞI KAYDIR</div>
   </div>
 
@@ -114,21 +109,31 @@
   </div>
 
   <div id="membershipCard">
-    <div class="card-3d">
-      <div style="font-size:12px; letter-spacing:4px; color:var(--gold)">VIP PASS</div>
-      <div style="font-size:30px; font-weight:900; letter-spacing:5px;">TEMAS</div>
-      <div style="text-align:center">
-        <div style="font-size:10px; color:var(--gray)">DURUM</div>
-        <div style="font-size:14px; color:var(--active-green)">ONAYLANDI</div>
+    <div class="card-3d" id="captureArea">
+      <div style="font-size:12px; letter-spacing:4px; color:var(--gold)">VIP MEMBERSHIP</div>
+      <div style="font-size:32px; font-weight:900; letter-spacing:5px; margin-top:20px;">TEMAS</div>
+      
+      <div style="text-align:center; margin-top:40px;">
+        <div style="font-size:10px; color:var(--gray); letter-spacing:2px;">MEMBER ID</div>
+        <div class="member-id" id="randomID">#TM-0000</div>
+        <div style="font-size:10px; color:var(--gray); letter-spacing:2px; margin-top:15px;">GÜNLÜK KOD</div>
+        <div style="font-size:18px; color:#fff; font-weight:bold;" id="dailyDisplay">ANKARA06</div>
+      </div>
+
+      <div style="text-align:center; margin-bottom:10px;">
+        <div style="font-size:10px; color:var(--gray)">STATÜ</div>
+        <div style="font-size:14px; color:var(--active-green); font-weight:bold;">ERİŞİM ONAYLANDI</div>
       </div>
     </div>
-    <p style="margin-top:40px; color:var(--gray); font-size:12px;">Yönlendiriliyorsunuz...</p>
+    
+    <button onclick="goToSite()" class="btn" style="margin-top:30px; background:var(--gold); color:#000;">Check-in Yap</button>
+    <p style="color:var(--gray); font-size:11px; margin-top:15px;">Kartın ekran görüntüsünü almayı unutma.</p>
   </div>
 
   <div id="loginModal">
     <div class="modal-box">
       <h3>Giriş Kodu</h3>
-      <input type="text" id="passCode" placeholder="••••" autocomplete="off" spellcheck="false">
+      <input type="text" id="passCode" placeholder="••••" autocomplete="off">
       <button class="btn" onclick="checkCode()" style="padding:16px;">Kodu Onayla</button>
       <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer;">Vazgeç</button>
     </div>
@@ -138,49 +143,54 @@
     const correctCode = "ANKARA06"; 
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform";
 
-    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
-
     function toggleAudio() {
       const audio = document.getElementById('vibe-audio');
       const btn = document.querySelector('.audio-toggle');
-      if (audio.paused) { audio.play(); btn.innerText = '🔊'; } 
-      else { audio.pause(); btn.innerText = '🔈'; }
+      if (audio.paused) { audio.play(); btn.innerText = '🔊'; } else { audio.pause(); btn.innerText = '🔈'; }
+    }
+
+    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+    function generateRandomID() {
+      const chars = '0123456789ABCDEF';
+      let id = '#TM-';
+      for(let i=0; i<4; i++) id += chars[Math.floor(Math.random()*16)];
+      return id;
     }
 
     function checkCode() {
       const val = document.getElementById('passCode').value.toUpperCase();
       if(val === correctCode) {
         document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('randomID').innerText = generateRandomID();
+        document.getElementById('dailyDisplay').innerText = correctCode;
         document.getElementById('membershipCard').style.display = 'flex';
-        setTimeout(() => { window.location.href = formUrl; }, 4000);
       } else {
         alert("Kod geçersiz.");
       }
     }
 
-    // Gece/Gündüz Modu (Saate göre başlık değişimi)
-    function checkTime() {
-      const hour = new Date().getHours();
-      const title = document.getElementById('main-title');
-      if (hour >= 20 || hour < 6) {
-        document.body.style.background = "#000";
-        title.style.textShadow = "0 0 20px rgba(255,255,255,0.5)";
-      }
+    function goToSite() {
+      window.location.href = formUrl;
     }
 
-    // Geri Sayım
     function updateTimer() {
       const now = new Date();
       const end = new Date();
       end.setHours(23, 59, 59);
       const diff = end - now;
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('timer').innerText = `${h < 10 ? '0'+h : h}:${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+      const h = Math.floor(diff/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      const s = Math.floor((diff%60000)/1000);
+      document.getElementById('timer').innerText = `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${s<10?'0'+s:s}`;
     }
     setInterval(updateTimer, 1000);
+
+    function checkTime() {
+      const hr = new Date().getHours();
+      if(hr >= 20 || hr < 6) document.getElementById('main-title').style.textShadow = "0 0 15px #fff";
+    }
   </script>
 </body>
 </html>
