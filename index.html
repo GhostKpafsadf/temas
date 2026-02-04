@@ -15,32 +15,42 @@
       background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
     }
 
+    /* SES KONTROLÜ */
     .audio-toggle {
       position: fixed; top: 20px; right: 20px; z-index: 2000;
       background: rgba(255,255,255,0.05); border: 1px solid var(--border);
       padding: 10px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
     }
 
+    /* ANA EKRAN (HERO) */
     .hero { 
       min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
       justify-content: center; padding: 60px 20px; box-sizing: border-box;
       background: radial-gradient(circle at center, #111 0%, #000 100%);
+      position: relative;
     }
 
+    /* YOĞUNLUK HARİTASI (HEATMAP) */
     .heatmap {
       display: flex; gap: 15px; margin-bottom: 25px; background: rgba(255,255,255,0.03);
       padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); font-size: 11px;
     }
     .heat-point { display: flex; align-items: center; gap: 5px; color: var(--gray); }
     .heat-active { color: var(--active-green); font-weight: bold; }
-    .pulse-ring { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 8px var(--active-green); }
+    .pulse-ring { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 8px var(--active-green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
 
     .logo-img { width: 80px; height: 80px; margin-bottom: 15px; border-radius: 22px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 40px; }
     h1 { font-size: 44px; margin: 0; letter-spacing: 8px; font-weight: 900; text-transform: uppercase; }
 
+    .badge { margin: 10px 0; padding: 5px 15px; border: 1px solid var(--border); border-radius: 20px; font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; }
+
+    /* GERİ SAYIM */
     .timer-box { margin: 15px 0; font-size: 13px; color: var(--gray); letter-spacing: 1px; }
     #timer { color: #fff; font-weight: 700; }
 
+    /* ANA BUTONLAR */
     .btn {
       display: block; padding: 22px; background: #fff; color: #000; 
       text-decoration: none; border-radius: 20px; font-weight: 800; 
@@ -48,6 +58,12 @@
       box-shadow: 0 10px 30px rgba(255,255,255,0.1);
     }
     .btn:active { transform: scale(0.96); }
+
+    /* ŞİFRE MODALI */
+    #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(20px); }
+    .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
+    input { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:22px; outline:none; transition: border 0.3s; }
+    input:focus { border-color: var(--gray); }
 
     /* VIP KART EKRANI */
     #membershipCard {
@@ -57,22 +73,22 @@
     .card-3d {
       width: 280px; height: 420px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
       border-radius: 20px; border: 1px solid var(--gold); position: relative;
-      box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); transform-style: preserve-3d;
+      box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
       display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px;
-      animation: cardEntrance 0.8s ease-out;
+      animation: cardEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    @keyframes cardEntrance { from { opacity: 0; transform: scale(0.8) rotateY(90deg); } to { opacity: 1; transform: scale(1) rotateY(0deg); } }
+    @keyframes cardEntrance { from { opacity: 0; transform: translateY(50px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
     
-    .member-id { font-family: monospace; color: var(--gold); font-size: 14px; margin-top: 10px; }
+    .member-id { font-family: monospace; color: var(--gold); font-size: 14px; margin-top: 5px; }
 
-    /* MODAL */
-    #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(20px); }
-    .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
-    input { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:22px; outline:none; }
-
-    /* İÇERİK */
+    /* BİLGİ ALANI (SCROLL) */
     .content-section { padding: 80px 30px; max-width: 450px; margin: 0 auto; text-align: left; }
+    h2 { font-size: 26px; font-weight: 800; margin-bottom: 20px; }
     .info-card { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 22px; border: 1px solid var(--border); margin-bottom: 15px; }
+    .info-card strong { color: #fff; display: block; margin-bottom: 5px; font-size: 18px; }
+    .info-card p { margin: 0; color: var(--gray); font-size: 15px; }
+
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
   </style>
 </head>
 <body onload="checkTime()">
@@ -92,32 +108,54 @@
     <div class="badge">ANKARA • VIP ACCESS</div>
 
     <div class="timer-box">Günün Teması Kapanıyor: <span id="timer">00:00:00</span></div>
+    
     <button onclick="openModal()" class="btn">Giriş Yap</button>
-    <div style="margin-top: 50px; color: var(--gray); font-size: 11px; letter-spacing: 2px; animation: bounce 2s infinite;">AŞAĞI KAYDIR</div>
+
+    <div style="margin-top: 50px; color: var(--gray); font-size: 11px; letter-spacing: 2px; animation: bounce 2s infinite; cursor: pointer;" onclick="window.scrollTo(0, window.innerHeight)">BİLGİ İÇİN KAYDIR ↓</div>
   </div>
 
   <div class="content-section">
-    <h2>Neden Temas?</h2>
+    <h2>Temas Nedir?</h2>
     <div class="info-card">
-      <strong>Anlık Sosyalleşme</strong>
-      <p>Yazışma yorgunluğunu geride bırakın. Aynı mekanda, aynı anda, sadece gerçek insanlar.</p>
+      <strong>Dijitalden Gerçeğe</strong>
+      <p>Aynı mekanda bulunduğun kişilerle anında tanışmanı sağlayan, Ankara'nın en seçkin topluluğu.</p>
     </div>
     <div class="info-card">
-      <strong>Günün İstatistiği</strong>
-      <p>Bugün Ankara'da 150+ doğrulanan üye ve 34 yeni tanışma gerçekleşti.</p>
+      <strong>Güvenli ve İzole</strong>
+      <p>Sadece o günün koduna sahip olanlar giriş yapabilir. Form linki her gün yenilenir ve gizli tutulur.</p>
+    </div>
+
+    <h2 style="margin-top:60px;">Nasıl Çalışır?</h2>
+    <div class="info-card">
+      <strong>1. Kodu Bul</strong>
+      <p>Instagram adresimizdeki hikayeleri takip ederek bugünün giriş kodunu öğren.</p>
+    </div>
+    <div class="info-card">
+      <strong>2. Kartını Al</strong>
+      <p>Kodu gir ve sana özel dijital VIP kartını oluştur. Ekran görüntüsü almayı unutma!</p>
+    </div>
+    <div class="info-card">
+      <strong>3. Check-in Yap</strong>
+      <p>Formu doldur ve o an mekanda olan diğer üyelerle iletişime geç.</p>
     </div>
   </div>
 
+  <div style="text-align: center; padding: 40px; opacity: 0.4;">
+    <a href="https://instagram.com/temas_ankara" style="color: #fff; text-decoration: none; font-size: 13px;">@temas_ankara</a>
+  </div>
+
   <div id="membershipCard">
-    <div class="card-3d" id="captureArea">
+    <div class="card-3d">
       <div style="font-size:12px; letter-spacing:4px; color:var(--gold)">VIP MEMBERSHIP</div>
       <div style="font-size:32px; font-weight:900; letter-spacing:5px; margin-top:20px;">TEMAS</div>
       
       <div style="text-align:center; margin-top:40px;">
         <div style="font-size:10px; color:var(--gray); letter-spacing:2px;">MEMBER ID</div>
-        <div class="member-id" id="randomID">#TM-0000</div>
-        <div style="font-size:10px; color:var(--gray); letter-spacing:2px; margin-top:15px;">GÜNLÜK KOD</div>
-        <div style="font-size:18px; color:#fff; font-weight:bold;" id="dailyDisplay">ANKARA06</div>
+        <div class="member-id" id="randomID">#TM-XXXX</div>
+        
+        <div style="font-size:10px; color:var(--gray); letter-spacing:2px; margin-top:20px;">GÜNLÜK ERİŞİM KODU</div>
+        <div style="font-size:24px; color:#fff; font-weight:bold; letter-spacing:6px; margin-top:5px;" id="dailyDisplay">••••••••</div>
+        <div style="font-size:13px; color:var(--gold); margin-top:8px; font-style: italic;">acaba ne? 😉</div>
       </div>
 
       <div style="text-align:center; margin-bottom:10px;">
@@ -126,55 +164,62 @@
       </div>
     </div>
     
-    <button onclick="goToSite()" class="btn" style="margin-top:30px; background:var(--gold); color:#000;">Check-in Yap</button>
-    <p style="color:var(--gray); font-size:11px; margin-top:15px;">Kartın ekran görüntüsünü almayı unutma.</p>
+    <button onclick="goToSite()" class="btn" style="margin-top:30px; background:var(--gold); color:#000;">Check-in Formuna Git</button>
+    <p style="color:var(--gray); font-size:11px; margin-top:15px; width:280px; text-align:center;">Kartının ekran görüntüsünü alıp hikayende paylaşabilirsin.</p>
   </div>
 
   <div id="loginModal">
     <div class="modal-box">
-      <h3>Giriş Kodu</h3>
-      <input type="text" id="passCode" placeholder="••••" autocomplete="off">
-      <button class="btn" onclick="checkCode()" style="padding:16px;">Kodu Onayla</button>
-      <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer;">Vazgeç</button>
+      <h3 style="margin:0;">Giriş Yap</h3>
+      <p style="font-size:13px; color:var(--gray); margin-top:10px;">Lütfen bugünün kodunu girin.</p>
+      <input type="text" id="passCode" placeholder="••••" autocomplete="off" spellcheck="false">
+      <button class="btn" onclick="checkCode()" style="padding:16px; font-size:16px;">Kodu Onayla</button>
+      <button onclick="closeModal()" style="background:none; border:none; color:var(--gray); margin-top:20px; cursor:pointer; font-weight:bold;">Vazgeç</button>
     </div>
   </div>
 
   <script>
+    // YAPILANDIRMA
     const correctCode = "ANKARA06"; 
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSePcPoTwYTHV7aumh1jBhcPTBStaR38GmOdrf3rC2nin2y8lw/viewform";
 
+    // Ses Kontrolü
     function toggleAudio() {
       const audio = document.getElementById('vibe-audio');
       const btn = document.querySelector('.audio-toggle');
-      if (audio.paused) { audio.play(); btn.innerText = '🔊'; } else { audio.pause(); btn.innerText = '🔈'; }
+      if (audio.paused) { audio.play(); btn.innerText = '🔊'; } 
+      else { audio.pause(); btn.innerText = '🔈'; }
     }
 
+    // Modal Fonksiyonları
     function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
 
-    function generateRandomID() {
-      const chars = '0123456789ABCDEF';
-      let id = '#TM-';
-      for(let i=0; i<4; i++) id += chars[Math.floor(Math.random()*16)];
-      return id;
-    }
-
+    // Giriş Kontrolü
     function checkCode() {
-      const val = document.getElementById('passCode').value.toUpperCase();
+      const val = document.getElementById('passCode').value.trim().toUpperCase();
       if(val === correctCode) {
         document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('randomID').innerText = generateRandomID();
-        document.getElementById('dailyDisplay').innerText = correctCode;
+        
+        // Kişiye özel Member ID üret
+        const randID = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('randomID').innerText = `#TM-${randID}`;
+        
+        // Kartı göster (Kod sansürlü kalacak)
         document.getElementById('membershipCard').style.display = 'flex';
+        window.scrollTo(0,0);
       } else {
-        alert("Kod geçersiz.");
+        alert("Üzgünüz, bu kod hatalı veya süresi dolmuş.");
+        document.getElementById('passCode').value = "";
       }
     }
 
+    // Form Yönlendirme
     function goToSite() {
-      window.location.href = formUrl;
+      window.location.replace(formUrl);
     }
 
+    // Geri Sayım Sayacı
     function updateTimer() {
       const now = new Date();
       const end = new Date();
@@ -187,10 +232,18 @@
     }
     setInterval(updateTimer, 1000);
 
+    // Gece Modu Efekti
     function checkTime() {
       const hr = new Date().getHours();
-      if(hr >= 20 || hr < 6) document.getElementById('main-title').style.textShadow = "0 0 15px #fff";
+      if(hr >= 20 || hr < 6) {
+        document.getElementById('main-title').style.textShadow = "0 0 20px rgba(255,255,255,0.6)";
+      }
     }
+
+    // Enter Tuşu ile Giriş
+    document.getElementById('passCode').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') { checkCode(); }
+    });
   </script>
 </body>
 </html>
