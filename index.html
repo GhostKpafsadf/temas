@@ -3,207 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TEMAS | Ankara VIP</title>
+    <title>TEMAS | Exclusive</title>
     <style>
-        :root { --gold: #d4af37; --bg: #000; --glass: rgba(255,255,255,0.05); --active: #4ade80; }
+        :root { --gold: #d4af37; --bg: #000; --active: #4ade80; --glass: rgba(255, 255, 255, 0.05); }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: -apple-system, system-ui, sans-serif; scroll-behavior: smooth; }
         
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--bg); color: #fff; font-family: -apple-system, system-ui, sans-serif; 
-            overflow-x: hidden; display: flex; align-items: center; justify-content: center;
-        }
+        /* OVERLAY EKRANLARI */
+        .overlay { position: fixed; inset: 0; z-index: 1000; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        
+        /* ANA İÇERİK (KAYDIRILABİLİR) */
+        #main-content { display: none; width: 100%; min-height: 100vh; overflow-y: auto; position: relative; z-index: 10; }
+        
+        .header-info { text-align: center; padding: 40px 20px; }
+        .location-tag { background: var(--glass); border: 1px solid #333; padding: 8px 20px; border-radius: 20px; font-size: 10px; letter-spacing: 2px; color: #fff; display: inline-block; margin-bottom: 20px; }
+        
+        .card-container { display: flex; justify-content: center; padding: 20px; perspective: 1000px; }
+        .vip-card { width: 100%; max-width: 340px; min-height: 500px; background: linear-gradient(135deg, #111, #000); border: 1px solid var(--gold); border-radius: 30px; padding: 30px 20px; box-sizing: border-box; transform-style: preserve-3d; transition: transform 0.1s; }
 
-        /* ARKA PLAN SİS ANİMASYONU */
-        #canvas { position: fixed; inset: 0; z-index: 1; opacity: 0.3; }
+        /* FORM */
+        .vip-form { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .vip-form input, .vip-form select, .vip-form textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #222; background: rgba(0,0,0,0.8); color: #fff; font-size: 14px; box-sizing: border-box; }
+        .legal-check { font-size: 10px; color: #666; display: flex; align-items: flex-start; gap: 8px; margin-top: 5px; text-align: left; }
+        
+        .btn { background: #fff; color: #000; padding: 16px; border-radius: 15px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-gold { background: var(--gold); }
 
-        /* KART ALANI */
-        .card-perspective { perspective: 1500px; z-index: 10; width: 90%; max-width: 350px; }
-        .card {
-            width: 100%; min-height: 580px; border-radius: 25px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-            border: 1px solid var(--gold); position: relative; transform-style: preserve-3d;
-            display: none; flex-direction: column; align-items: center; padding: 30px 20px; box-sizing: border-box;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
+        /* ALT BİLGİ ALANI */
+        .info-section { padding: 60px 30px; background: #050505; text-align: center; border-top: 1px solid #111; margin-top: 40px; }
+        .info-section h3 { color: var(--gold); letter-spacing: 3px; }
+        .info-section p { color: #888; font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto; }
 
-        /* FORM STİLLERİ */
-        .vip-form { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .vip-form input, .vip-form select, .vip-form textarea {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.6); color: #fff; font-size: 14px; box-sizing: border-box; outline: none;
-        }
-        .vip-form textarea { resize: none; height: 60px; }
-        .row { display: flex; gap: 10px; }
-
-        .btn {
-            background: #fff; color: #000; padding: 16px; border-radius: 12px;
-            font-weight: 800; border: none; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px;
-        }
-
-        /* GİRİŞ VE KONUM EKRANLARI */
-        #overlay-screen {
-            position: fixed; inset: 0; z-index: 1000; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px;
-        }
-
-        #status-badge {
-            font-size: 10px; color: var(--active); border: 1px solid var(--active);
-            padding: 5px 20px; border-radius: 20px; margin-top: 20px; letter-spacing: 2px;
-        }
+        #success-msg { display: none; text-align: center; margin-top: 50px; }
     </style>
 </head>
-<body onclick="initAudio()">
+<body>
 
-    <canvas id="canvas"></canvas>
-    <audio id="snd-access" src="https://actions.google.com/sounds/v1/science_fiction/access_granted.ogg"></audio>
-
-    <div id="overlay-screen">
-        <div id="location-content">
-            <h1 style="letter-spacing: 8px;">TEMAS</h1>
-            <p style="color: var(--gold); font-size: 11px; letter-spacing: 3px; margin-bottom: 30px;">ANKARA • LIMITED ACCESS</p>
-            <p style="font-size: 13px; color: #888; max-width: 250px; line-height: 1.6;">Bu platforma erişim sadece Ankara sınırları içerisindeki üyelere özeldir.</p>
-            <button class="btn" onclick="verifyLocation()" style="width: 220px; margin-top: 20px;">KONUMU DOĞRULA</button>
-        </div>
-
-        <div id="code-content" style="display: none;">
-            <h2 style="letter-spacing: 5px;">ERİŞİM KODU</h2>
-            <input type="text" id="passCode" placeholder="••••" style="background:none; border:none; border-bottom:2px solid var(--gold); color:#fff; text-align:center; font-size:30px; width:150px; outline:none; margin:20px 0; letter-spacing:10px;">
-            <button class="btn" onclick="checkCode()" style="width: 200px;">SİSTEME GİR</button>
-        </div>
+    <div id="step-location" class="overlay">
+        <h1 style="letter-spacing: 10px;">TEMAS</h1>
+        <p style="color: var(--gold); font-size: 11px; letter-spacing: 4px; margin-bottom: 40px;">ANKARA • LIMITED ACCESS</p>
+        <button class="btn" onclick="verifyLoc()" style="width: 200px;">KONUMU DOĞRULA</button>
     </div>
 
-    <div class="card-perspective">
-        <div class="card" id="mainCard">
-            <div style="text-align: center; transform: translateZ(30px);">
-                <div style="font-size: 9px; letter-spacing: 4px; color: var(--gold); opacity: 0.8;">ANKARA PROTOCOL</div>
-                <h1 style="margin: 5px 0; letter-spacing: 8px; font-size: 26px;">TEMAS</h1>
-            </div>
+    <div id="step-code" class="overlay" style="display: none;">
+        <h2 style="letter-spacing: 5px; margin-bottom: 5px;">ERİŞİM KODU</h2>
+        <p style="color: var(--gold); font-size: 9px; margin-bottom: 30px;">KİMLİK DOĞRULAMA GEREKLİ</p>
+        <input type="text" id="entryCode" placeholder="••••" style="background:none; border:none; border-bottom:2px solid var(--gold); color:#fff; text-align:center; font-size:32px; width:160px; outline:none; letter-spacing:10px; margin-bottom:30px;">
+        <button class="btn" onclick="verifyCode()" style="width: 200px;">SİSTEME GİR</button>
+    </div>
 
-            <form id="checkinForm" class="vip-form">
-                <input type="text" name="Ad Soyad" placeholder="Ad Soyad" required>
-                <input type="text" name="Instagram" placeholder="Instagram Kullanıcı Adı" required>
-                <input type="tel" name="Telefon" placeholder="Telefon (05xx)" required>
-                <div class="row">
-                    <input type="number" name="Boy" placeholder="Boy (cm)" style="flex:1">
-                    <select name="Yas" style="flex:1" required>
-                        <option value="" disabled selected>Yaş</option>
-                        <option value="18-22">18-22</option>
-                        <option value="23-27">23-27</option>
-                        <option value="28+">28+</option>
-                    </select>
-                </div>
-                <textarea name="Hobiler" placeholder="Hobilerin ve ilgi alanların..."></textarea>
-                <select name="Mod" required>
-                    <option value="" disabled selected>Bugünkü Modun?</option>
-                    <option value="Kahve">☕ Kahve & Sohbet</option>
-                    <option value="Eğlence">🍸 Eğlence / Party</option>
-                    <option value="Network">🤝 Network / İş</option>
-                </select>
-                <div style="font-size: 10px; color: #666; padding: 5px;">
-                    <label><input type="checkbox" required> 18 yaşından büyüğüm.</label>
-                </div>
-                <button type="submit" id="submitBtn" class="btn" style="background: var(--gold);">CHECK-IN YAP</button>
-            </form>
+    <div id="main-content">
+        <div class="header-info">
+            <div class="location-tag">LIVE AT ANKAMALL</div>
+            <h1 style="margin:0; letter-spacing: 12px; font-size: 32px;">TEMAS</h1>
+            <p style="color: #666; font-size: 12px; margin-top: 10px;">Kapanışa: <span id="timer" style="color: #fff;">22:17:36</span></p>
+        </div>
 
-            <div id="successContent" style="display: none; text-align: center; margin-top: 40px; transform: translateZ(50px);">
-                <div style="font-size: 50px; margin-bottom: 10px;">✨</div>
-                <h2 id="userNameDisp" style="margin: 0; letter-spacing: 2px;"></h2>
-                <p id="userIDDisp" style="font-family: monospace; color: var(--gold); margin: 5px 0;"></p>
-                <div id="status-badge">ERİŞİM ONAYLANDI</div>
-                <p style="font-size: 11px; color: #555; margin-top: 30px;">Kartın dijital kopyası oluşturuldu.<br>Ekran görüntüsü alabilirsin.</p>
+        <div class="card-container">
+            <div class="vip-card" id="card">
+                <div id="form-box">
+                    <p style="font-size: 10px; color: var(--gold); text-align: center; letter-spacing: 4px;">VIP MEMBERSHIP FORM</p>
+                    <form id="checkinForm" class="vip-form">
+                        <input type="text" name="Ad Soyad" placeholder="Ad Soyad" required>
+                        <input type="text" name="Instagram" placeholder="Instagram (@...)" required>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" name="Yas" placeholder="Yaş" style="flex:1">
+                            <input type="number" name="Boy" placeholder="Boy" style="flex:1">
+                        </div>
+                        <select name="Amac" required>
+                            <option value="" disabled selected>Bugünkü Amacın?</option>
+                            <option value="Sohbet">☕ Kahve & Sohbet</option>
+                            <option value="Eglence">🍸 Eğlence</option>
+                            <option value="Network">🤝 Network</option>
+                        </select>
+                        
+                        <div class="legal-check">
+                            <input type="checkbox" required>
+                            <span>Verilerimin gizlilik politikası kapsamında işlenmesini ve 18 yaş sınırını onaylıyorum.</span>
+                        </div>
+                        <div class="legal-check">
+                            <input type="checkbox" required>
+                            <span>Mekan kurallarına ve topluluk rehberine uymayı taahhüt ediyorum.</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold" style="margin-top: 15px;">Gönder ve Check-in Yap</button>
+                    </form>
+                </div>
+
+                <div id="success-msg">
+                    <div style="font-size: 40px; margin-bottom: 20px;">✨</div>
+                    <h2 id="userName" style="letter-spacing: 2px; margin: 0;"></h2>
+                    <p id="userId" style="color: var(--gold); font-family: monospace;"></p>
+                    <div style="color: var(--active); border: 1px solid var(--active); padding: 8px 20px; border-radius: 20px; display: inline-block; margin-top: 20px; font-size: 12px;">ERİŞİM ONAYLANDI</div>
+                </div>
             </div>
+        </div>
+
+        <div class="info-section">
+            <h3>TEMAS NEDİR?</h3>
+            <p>TEMAS, Ankara'nın seçkin lokasyonlarında gerçekleşen, sadece doğrulanmış üyelerin katılabildiği kapalı devre bir sosyal ağdır. Burada anonimlik ve kalite esastır.</p>
+            <div style="margin-top: 30px; opacity: 0.3; font-size: 10px;">© 2026 TEMAS PROTOCOL • 06 VIP</div>
         </div>
     </div>
 
     <script>
-        let audioActive = false;
-        function initAudio() { audioActive = true; }
-
-        // 1. KONUM DOĞRULAMA
-        function verifyLocation() {
+        // 1. KONUM
+        function verifyLoc() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((pos) => {
-                    const lat = pos.coords.latitude;
-                    if (lat > 39.0 && lat < 41.0) { // Ankara
-                        document.getElementById('location-content').style.display = 'none';
-                        document.getElementById('code-content').style.display = 'block';
-                    } else { alert("Bu platform sadece Ankara sınırları içerisinde çalışır."); }
-                }, () => alert("Konum izni verilmeden devam edilemez."));
+                    document.getElementById('step-location').style.display = 'none';
+                    document.getElementById('step-code').style.display = 'flex';
+                }, () => alert("Konum izni olmadan protokol başlatılamaz."));
             }
         }
 
-        // 2. KOD KONTROLÜ
-        function checkCode() {
-            const code = document.getElementById('passCode').value.toUpperCase();
-            if (code === "ANKARA06") {
-                if(audioActive) document.getElementById('snd-access').play();
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                document.getElementById('overlay-screen').style.display = 'none';
-                document.getElementById('mainCard').style.display = 'flex';
-                checkExisting();
-            } else { alert("Hatalı Giriş Kodu."); }
+        // 2. KOD
+        function verifyCode() {
+            const code = document.getElementById('entryCode').value.toUpperCase();
+            if(code === "ANKARA06") {
+                document.getElementById('step-code').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                checkStorage();
+            } else { alert("GEÇERSİZ ERİŞİM KODU"); }
         }
 
-        // 3. FORM GÖNDERİMİ (FORMPSREE)
+        // 3. FORM GÖNDERİMİ (SİTEDE KALARAK)
         const form = document.getElementById('checkinForm');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = "GÖNDERİLİYOR...";
-
+            const btn = e.target.querySelector('button');
+            btn.innerText = "İŞLENİYOR...";
+            
             fetch("https://formspree.io/f/xaqdwyba", {
                 method: "POST",
                 body: new FormData(form),
                 headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (response.ok) {
-                    const name = form.querySelector('[name="Ad Soyad"]').value;
-                    localStorage.setItem('temas_user', name);
-                    localStorage.setItem('temas_date', new Date().toLocaleDateString());
-                    showSuccess(name);
-                }
+            }).then(() => {
+                const name = form.querySelector('[name="Ad Soyad"]').value;
+                localStorage.setItem('temas_user', name);
+                showSuccess(name);
             });
         });
 
         function showSuccess(name) {
-            document.getElementById('checkinForm').style.display = 'none';
-            document.getElementById('successContent').style.display = 'block';
-            document.getElementById('userNameDisp').innerText = name.toUpperCase();
-            document.getElementById('userIDDisp').innerText = "#TM-" + Math.floor(1000 + Math.random() * 9000);
-            if(navigator.vibrate) navigator.vibrate(200);
+            document.getElementById('form-box').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'block';
+            document.getElementById('userName').innerText = name.toUpperCase();
+            document.getElementById('userId').innerText = "#TM-" + Math.floor(1000 + Math.random() * 9000);
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function checkExisting() {
+        function checkStorage() {
             const saved = localStorage.getItem('temas_user');
-            const date = localStorage.getItem('temas_date');
-            if (saved && date === new Date().toLocaleDateString()) {
-                showSuccess(saved);
-            }
+            if(saved) showSuccess(saved);
         }
 
-        // 4. 3D HAREKET
+        // 3D KART HAREKETİ
         window.addEventListener('deviceorientation', (e) => {
-            const card = document.getElementById('mainCard');
-            const y = Math.min(Math.max(e.gamma, -15), 15);
-            const x = Math.min(Math.max(e.beta - 45, -15), 15);
-            card.style.transform = `rotateY(${y}deg) rotateX(${x}deg)`;
+            const card = document.getElementById('card');
+            const rY = Math.min(Math.max(e.gamma, -15), 15);
+            const rX = Math.min(Math.max(e.beta - 45, -15), 15);
+            card.style.transform = `rotateY(${rY}deg) rotateX(${rX}deg)`;
         });
-
-        // ARKA PLAN ANİMASYONU
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particles = Array.from({length: 50}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2}));
-        function animate() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#d4af37';
-            particles.forEach(p => {
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
-                p.y -= 0.3; if(p.y < 0) p.y = canvas.height;
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
     </script>
 </body>
 </html>
