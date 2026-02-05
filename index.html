@@ -1,309 +1,226 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>TEMAS | Ankara</title>
-  <style>
-    :root { 
-      --bg: #000; --text: #fff; --gray: #888; --border: rgba(255, 255, 255, 0.1); 
-      --active-green: #4ade80; --gold: #d4af37; --glass: rgba(255, 255, 255, 0.05);
-    }
-    
-    body { 
-      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
-      background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TEMAS | OMNI 06</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --gold: #d4af37; --cyan: #00f2ff; --bg: #050505; --glass: rgba(255,255,255,0.03); --active: #4ade80; }
+        
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: var(--bg); color: #fff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
 
-    /* SES KONTROLÜ */
-    .audio-toggle {
-      position: fixed; top: 20px; right: 20px; z-index: 2000;
-      background: var(--glass); border: 1px solid var(--border);
-      padding: 10px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(10px);
-    }
+        /* ARKA PLAN PARTICLE (ANKARA SİSİ) */
+        #canvas { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.3; }
 
-    /* ANA EKRAN */
-    .hero { 
-      min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
-      justify-content: center; padding: 60px 20px; box-sizing: border-box;
-      background: radial-gradient(circle at center, #111 0%, #000 100%);
-    }
+        /* VIP KART TASARIMI */
+        .card-perspective { perspective: 2000px; z-index: 10; width: 90%; max-width: 340px; }
+        .card {
+            width: 100%; height: 540px; border-radius: 30px;
+            background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            position: relative; transform-style: preserve-3d;
+            display: none; flex-direction: column; align-items: center; justify-content: space-around;
+            padding: 30px 20px; box-sizing: border-box;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
 
-    .heatmap {
-      display: flex; gap: 15px; margin-bottom: 25px; background: var(--glass);
-      padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); font-size: 11px;
-    }
-    .pulse-ring { width: 6px; height: 6px; background: var(--active-green); border-radius: 50%; box-shadow: 0 0 8px var(--active-green); animation: p 2s infinite; }
-    @keyframes p { 0% {transform: scale(1); opacity:1;} 100% {transform: scale(2.5); opacity:0;} }
+        .glare {
+            position: absolute; inset: 0; border-radius: 30px;
+            background: linear-gradient(120deg, transparent 30%, rgba(212,175,55,0.1) 45%, transparent 70%);
+            pointer-events: none;
+        }
 
-    .logo-container { width: 100px; height: 100px; margin-bottom: 20px; }
-    .logo-img { width: 100%; height: 100%; object-fit: contain; }
+        /* FORM ALANI */
+        .internal-form {
+            width: 100%; display: flex; flex-direction: column; gap: 10px;
+            background: var(--glass); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px);
+        }
+        .internal-form input, .internal-form select {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: #000; color: #fff; font-size: 14px; box-sizing: border-box;
+        }
 
-    h1 { font-size: 44px; margin: 0; letter-spacing: 8px; font-weight: 900; text-transform: uppercase; text-align: center; }
+        /* BUTONLAR */
+        .btn {
+            background: #fff; color: #000; padding: 15px 30px; border-radius: 12px;
+            font-weight: 800; border: none; cursor: pointer; transition: 0.3s; width: 100%;
+        }
+        .btn:active { transform: scale(0.95); }
 
-    .btn {
-      display: block; padding: 20px; background: #fff; color: #000; 
-      text-decoration: none; border-radius: 18px; font-weight: 800; 
-      font-size: 17px; border: none; width: 100%; max-width: 320px; cursor: pointer; transition: 0.3s;
-    }
-    .btn:disabled { background: var(--gray); cursor: not-allowed; }
-
-    /* VIP EKRANI */
-    #membershipCard {
-      display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
-      background: #000; z-index: 3000; flex-direction: column; align-items: center; 
-      overflow-y: auto; padding: 40px 20px; box-sizing: border-box; animation: fadeIn 0.5s;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .card-3d {
-      width: 100%; max-width: 300px; height: 420px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-      border-radius: 24px; border: 1px solid var(--gold); margin-bottom: 30px;
-      display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
-      padding: 40px 20px; box-sizing: border-box; box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-      position: relative;
-    }
-
-    .card-stamp {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
-      border: 3px solid var(--active-green); color: var(--active-green); padding: 10px 20px;
-      font-weight: 900; letter-spacing: 5px; border-radius: 10px; font-size: 24px;
-      opacity: 0; transition: 0.5s; pointer-events: none;
-    }
-
-    .internal-form {
-      width: 100%; max-width: 320px; display: none; flex-direction: column; gap: 12px;
-      background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border);
-      backdrop-filter: blur(20px); margin-bottom: 50px;
-    }
-
-    .internal-form input, .internal-form select, .internal-form textarea {
-      width: 100%; padding: 16px; border-radius: 14px; border: 1px solid var(--border);
-      background: rgba(0,0,0,0.3); color: #fff; font-size: 15px; outline: none; box-sizing: border-box;
-    }
-    .internal-form textarea { min-height: 80px; resize: none; }
-
-    #loginModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; backdrop-filter:blur(15px); }
-    .modal-box { background:#111; padding:40px 30px; border-radius:30px; border: 1px solid var(--border); width: 85%; max-width: 320px; text-align: center; }
-    #passCode { width:100%; padding:18px; margin:20px 0; border-radius:15px; border: 1px solid var(--border); background:#000; color:#fff; text-align:center; font-size:22px; outline:none; }
-
-    /* KONUM UYARISI */
-    #locationOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; box-sizing: border-box; }
-  </style>
+        #qrcode { padding: 10px; background: #fff; border-radius: 15px; transform: translateZ(50px); display: none; }
+        
+        /* OVERLAYS */
+        #location-screen, #boot-screen {
+            position: fixed; inset: 0; z-index: 1000; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
+    </style>
 </head>
-<body onload="checkTime()">
+<body onclick="enableAudio()">
 
-  <div id="locationOverlay">
-    <div style="font-size: 50px; margin-bottom: 20px;">📍</div>
-    <h2>Bölge Kısıtlaması</h2>
-    <p style="color: var(--gray);">TEMAS'a erişmek için Ankara sınırları içerisinde olmalısın.</p>
-    <button class="btn" onclick="requestLocation()">Konumu Doğrula</button>
-  </div>
+    <canvas id="canvas"></canvas>
+    <audio id="snd-access" src="https://actions.google.com/sounds/v1/science_fiction/access_granted.ogg"></audio>
 
-  <audio id="vibe-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3"></audio>
-  <div class="audio-toggle" onclick="toggleAudio()">🔈</div>
-
-  <div class="hero">
-    <div class="heatmap">
-      <div style="display:flex; align-items:center; gap:5px;">
-        <span class="pulse-ring"></span> 
-        LIVE: <span id="liveCount">14</span> ÜYE AKTİF
-      </div>
-    </div>
-    <div class="logo-container">
-        <img src="logo.png" alt="TEMAS" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/7074/7074151.png'">
-    </div>
-    <h1>TEMAS</h1>
-    <div style="font-size:11px; color:var(--gray); letter-spacing:3px; margin-bottom:30px;">ANKARA • LIMITED ACCESS</div>
-    <div class="timer-box" style="margin-bottom:20px; font-size:13px; color:var(--gray);">Kapanışa: <span id="timer" style="color:#fff">00:00:00</span></div>
-    <button onclick="openModal()" class="btn">Giriş Yap</button>
-  </div>
-
-  <div id="membershipCard">
-    <div class="card-3d" id="cardArea">
-      <div class="card-stamp" id="successStamp">AKTİF</div>
-      <div style="font-size:10px; letter-spacing:4px; color:var(--gold); opacity:0.8;">VIP MEMBERSHIP</div>
-      <div style="font-size:32px; font-weight:900; letter-spacing:6px;">TEMAS</div>
-      <div style="text-align:center;">
-        <div id="randomID" style="color:var(--gold); font-family:monospace; font-size:14px; margin-bottom:15px; opacity:0.7;">#TM-XXXX</div>
-        <div style="font-size:24px; letter-spacing:8px; margin-bottom:5px;">••••••••</div>
-        <div style="font-size:12px; color:var(--gold); font-style:italic;">hoş geldin</div>
-      </div>
-      <div style="font-size:11px; color:var(--active-green); font-weight:bold; letter-spacing:2px; border:1px solid var(--active-green); padding:5px 15px; border-radius:10px;">ERİŞİM ONAYLANDI</div>
+    <div id="location-screen">
+        <div style="font-size: 50px; margin-bottom: 20px;">📍</div>
+        <h2>BÖLGE KONTROLÜ</h2>
+        <p style="color: #888; font-size: 13px;">TEMAS'a erişmek için Ankara sınırları içerisinde olmalısın.</p>
+        <button class="btn" onclick="requestLocation()" style="width: 200px;">KONUMU DOĞRULA</button>
     </div>
 
-    <button id="shareBtn" class="btn" style="display:none; background:transparent; color:#fff; border:1px solid var(--border); margin-bottom:20px;" onclick="shareCard()">✨ Kartını Paylaş</button>
-
-    <form id="checkinForm" class="internal-form">
-      <div id="formContent">
-          <div style="text-align:center; font-size:14px; color:var(--gold); margin-bottom:10px; font-weight:bold;">PROFİLİNİ TAMAMLA</div>
-          <input type="text" name="name" placeholder="Ad Soyad" required>
-          <input type="text" name="instagram" placeholder="Instagram Kullanıcı Adı" required>
-          <input type="tel" name="phone" placeholder="Telefon (05xx)" required>
-          <div style="display: flex; gap: 10px;">
-            <input type="number" name="height" placeholder="Boy (cm)" style="flex: 1;">
-            <select name="age" style="flex: 1;" required>
-                <option value="" disabled selected>Yaş</option>
-                <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-                <option value="21">21</option><option value="22">22</option><option value="23-26">23-26</option><option value="27+">27+</option>
-            </select>
-          </div>
-          <textarea name="hobbies" placeholder="Hobilerin ve ilgi alanların..."></textarea>
-          <select name="mood" required>
-            <option value="" disabled selected>Bugünkü Modun?</option>
-            <option value="☕ Kahve & Sohbet">☕ Kahve & Sohbet</option>
-            <option value="🍸 Eğlence / Party">🍸 Eğlence / Party</option>
-            <option value="🤝 Network / İş">🤝 Network / İş</option>
-          </select>
-          <div style="font-size:11px; color:var(--gray); margin:10px 0;">
-            <label><input type="checkbox" required> 18 yaşından büyüğüm.</label><br>
-            <label><input type="checkbox" required> Kuralları kabul ediyorum.</label>
-          </div>
-          <input type="hidden" name="_memberID" id="hiddenMemberID">
-          <button type="submit" id="submitBtn" class="btn" style="background:var(--gold); color:#000;">Check-in Yap</button>
-      </div>
-    </form>
-    
-    <button id="showFormBtn" onclick="showForm()" class="btn" style="background:var(--gold); color:#000; max-width:300px;">Check-in Yap</button>
-    <p id="statusMsg" style="font-size:11px; color:var(--gray); margin-top:20px; text-align:center;">Ekran görüntüsü almayı unutma.</p>
-  </div>
-
-  <div id="loginModal">
-    <div class="modal-box">
-      <h3>Giriş Kodu</h3>
-      <input type="text" id="passCode" placeholder="••••">
-      <button class="btn" onclick="checkCode()">Onayla</button>
+    <div id="boot-screen" style="display: none;">
+        <h1 style="letter-spacing: 10px;">TEMAS</h1>
+        <div id="loader" style="width: 30px; height: 30px; border: 2px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: spin 1s infinite linear;"></div>
+        <p id="boot-text" style="font-family: monospace; color: var(--gold); font-size: 11px; margin-top: 15px;">PROTOKOL BAŞLATILIYOR...</p>
+        <input type="text" id="passInput" placeholder="ERİŞİM KODU" style="background: none; border: none; border-bottom: 1px solid #333; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; outline: none; display: none;">
+        <button id="entryBtn" class="btn" style="display: none; width: 200px;" onclick="validateEntry()">GİRİŞ YAP</button>
     </div>
-  </div>
 
-  <script>
-    const correctCode = "ANKARA06";
+    <div class="card-perspective">
+        <div class="card" id="mainCard">
+            <div class="glare"></div>
+            
+            <div style="text-align: center;">
+                <div style="font-size: 9px; letter-spacing: 5px; color: var(--gold);">ANKARA PROTOCOL</div>
+                <h1 style="margin: 0; letter-spacing: 10px; font-size: 28px;">TEMAS</h1>
+            </div>
 
-    // 1. HAPTIC FEEDBACK (TİTREŞİM)
-    function vibrate(ms = 50) {
-      if (navigator.vibrate) navigator.vibrate(ms);
-    }
+            <div id="qrcode"></div>
 
-    // 2. KONUM DOĞRULAMA (Sadece Ankara)
-    function requestLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                // Ankara koordinat sınırları (Yaklaşık)
-                if (lat > 39.0 && lat < 41.0 && lon > 32.0 && lon < 34.0) {
-                    document.getElementById('locationOverlay').style.display = 'none';
-                    localStorage.setItem('location_verified', 'true');
-                } else {
-                    alert("Maalesef sadece Ankara içerisinden erişim sağlanabilir.");
-                }
-            }, () => alert("Konum izni verilmedi."));
-        }
-    }
+            <form id="vipForm" class="internal-form">
+                <input type="text" name="Ad Soyad" id="formName" placeholder="Ad Soyad" required>
+                <input type="text" name="Instagram" id="formInsta" placeholder="Instagram Kullanıcı Adı" required>
+                <select name="Mod" required>
+                    <option value="" disabled selected>Modun Nedir?</option>
+                    <option value="Sohbet">☕ Kahve & Sohbet</option>
+                    <option value="Eglence">🍸 Eğlence</option>
+                    <option value="Network">🤝 Network</option>
+                </select>
+                <button type="submit" id="submitBtn" class="btn" style="background: var(--gold);">KAYDI TAMAMLA</button>
+            </form>
 
-    // Başlangıçta konumu kontrol et
-    if (!localStorage.getItem('location_verified')) {
-        document.getElementById('locationOverlay').style.display = 'flex';
-    }
+            <div id="userInfo" style="display: none; text-align: center; transform: translateZ(40px);">
+                <h2 id="dispName" style="margin: 0; letter-spacing: 2px;"></h2>
+                <p id="dispID" style="font-family: monospace; color: var(--gold); font-size: 14px;"></p>
+                <div style="font-size: 10px; color: var(--active); border: 1px solid var(--active); padding: 5px 20px; border-radius: 20px; display: inline-block; margin-top: 10px;">AKTİF ÜYE</div>
+            </div>
 
-    // 3. GELİŞMİŞ PAYLAŞ BUTONU
-    async function shareCard() {
-        vibrate(100);
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'TEMAS VIP Kartım',
-                    text: 'Bugün Ankara TEMAS kulübündeyim! #TEMASAnkara',
-                    url: window.location.href
-                });
-            } catch (err) { console.log("Paylaşım iptal edildi."); }
-        } else {
-            alert("Paylaşım bu tarayıcıda desteklenmiyor, ekran görüntüsü alabilirsin!");
-        }
-    }
+            <div style="font-size: 9px; opacity: 0.4;">STATUS: OMNI_PRESENT</div>
+        </div>
+    </div>
 
-    // FORM GÖNDERİMİ
-    const form = document.getElementById("checkinForm");
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        vibrate([50, 30, 50]); // Başarılı basım titreşimi
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerText = "Gönderiliyor...";
+    <script>
+        let audioInit = false;
+        function enableAudio() { audioInit = true; }
 
-        const data = new FormData(form);
-        fetch("https://formspree.io/f/xaqdwyba", {
-            method: "POST",
-            body: data,
-            headers: { 'Accept': 'application/json' }
-        }).then(response => {
-            if (response.ok) {
-                localStorage.setItem('temas_last_send', new Date().toLocaleDateString());
-                document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Aramıza hoş geldin! ✨</div>";
-                document.getElementById('successStamp').style.opacity = "1";
-                document.getElementById('shareBtn').style.display = 'block';
-                vibrate(200);
-            } else {
-                alert("Hata oluştu.");
-                btn.disabled = false;
+        // 1. KONUM KONTROLÜ
+        function requestLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    // Ankara koordinatları (39.0 - 41.0 Lat)
+                    if (lat > 39.0 && lat < 41.0) {
+                        document.getElementById('location-screen').style.display = 'none';
+                        startBoot();
+                    } else { alert("Sadece Ankara'dan erişim sağlanabilir."); }
+                }, () => alert("Konum izni şart!"));
             }
-        });
-    });
-
-    function checkSubmissionStatus() {
-        const lastDate = localStorage.getItem('temas_last_send');
-        if (lastDate === new Date().toLocaleDateString()) {
-            document.getElementById('showFormBtn').style.display = 'none';
-            document.getElementById('checkinForm').style.display = 'flex';
-            document.getElementById('formContent').innerHTML = "<div style='text-align:center; padding:20px; color:var(--gold);'>Bugün zaten check-in yaptın! ✨</div>";
-            document.getElementById('successStamp').style.opacity = "1";
-            document.getElementById('shareBtn').style.display = 'block';
         }
-    }
 
-    function toggleAudio() {
-      const a = document.getElementById('vibe-audio');
-      if (a.paused) { a.play(); document.querySelector('.audio-toggle').innerText = '🔊'; }
-      else { a.pause(); document.querySelector('.audio-toggle').innerText = '🔈'; }
-    }
+        // 2. BOOT SÜRECİ
+        function startBoot() {
+            document.getElementById('boot-screen').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('boot-text').innerText = "ERİŞİM KODU GEREKLİ";
+                document.getElementById('passInput').style.display = 'block';
+                document.getElementById('entryBtn').style.display = 'block';
+            }, 2000);
+        }
 
-    function openModal() { vibrate(20); document.getElementById('loginModal').style.display = 'flex'; }
-    
-    function checkCode() {
-      if(document.getElementById('passCode').value.toUpperCase() === correctCode) {
-        vibrate([100, 50, 100]);
-        document.getElementById('loginModal').style.display = 'none';
-        const rand = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('randomID').innerText = `#TM-${rand}`;
-        document.getElementById('hiddenMemberID').value = `#TM-${rand}`;
-        document.getElementById('membershipCard').style.display = 'flex';
-        checkSubmissionStatus();
-        window.scrollTo(0,0);
-      } else { alert("Kod hatalı."); }
-    }
+        // 3. KOD DOĞRULAMA
+        function validateEntry() {
+            const pass = document.getElementById('passInput').value.toUpperCase();
+            if (pass === "ANKARA06") {
+                if(audioInit) document.getElementById('snd-access').play();
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('mainCard').style.display = 'flex';
+                checkExisting();
+            } else { alert("Hatalı Kod."); }
+        }
 
-    function showForm() {
-      vibrate(20);
-      document.getElementById('showFormBtn').style.display = 'none';
-      document.getElementById('checkinForm').style.display = 'flex';
-    }
+        // 4. FORM GÖNDERİMİ (FORMPSREE - Sitede Kalma)
+        const vForm = document.getElementById('vipForm');
+        vForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = "YÜKLENİYOR...";
 
-    function updateTimer() {
-      const now = new Date();
-      const end = new Date(); end.setHours(23, 59, 59);
-      const diff = end - now;
-      const h = Math.floor(diff/3600000);
-      const m = Math.floor((diff%3600000)/60000);
-      const s = Math.floor((diff%60000)/1000);
-      document.getElementById('timer').innerText = `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${s<10?'0'+s:s}`;
-    }
-    setInterval(updateTimer, 1000);
+            fetch("https://formspree.io/f/xaqdwyba", {
+                method: "POST",
+                body: new FormData(vForm),
+                headers: { 'Accept': 'application/json' }
+            }).then(() => {
+                const name = document.getElementById('formName').value;
+                localStorage.setItem('temas_member', name);
+                localStorage.setItem('temas_day', new Date().toLocaleDateString());
+                showCard(name);
+            });
+        });
 
-    function checkTime() {
-      if(new Date().getHours() >= 20 || new Date().getHours() < 6) {
-        document.querySelector('h1').style.textShadow = "0 0 20px rgba(255,255,255,0.4)";
-      }
-    }
-  </script>
+        function showCard(name) {
+            document.getElementById('vipForm').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('qrcode').style.display = 'block';
+            document.getElementById('dispName').innerText = name.toUpperCase();
+            const id = "#TM-" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('dispID').innerText = id;
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: `TEMAS:${name}:${id}`,
+                width: 120, height: 120
+            });
+        }
+
+        function checkExisting() {
+            const saved = localStorage.getItem('temas_member');
+            const day = localStorage.getItem('temas_day');
+            if(saved && day === new Date().toLocaleDateString()) {
+                showCard(saved);
+            }
+        }
+
+        // 3D HAREKET
+        window.addEventListener('deviceorientation', (e) => {
+            const card = document.getElementById('mainCard');
+            const y = Math.min(Math.max(e.gamma, -20), 20);
+            const x = Math.min(Math.max(e.beta - 45, -20), 20);
+            card.style.transform = `rotateY(${y}deg) rotateX(${x}deg)`;
+        });
+
+        // ARKA PLAN ANİMASYONU
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let p = Array.from({length: 80}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*1.5}));
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#d4af37';
+            p.forEach(i => {
+                ctx.beginPath(); ctx.arc(i.x, i.y, i.s, 0, 7); ctx.fill();
+                i.y -= 0.2; if(i.y < 0) i.y = canvas.height;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+    <style> @keyframes spin { 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
